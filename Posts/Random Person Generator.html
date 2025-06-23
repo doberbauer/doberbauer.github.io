@@ -1,0 +1,294 @@
+<p>The Watch Dogs video game series is known for its innovative hacking
+mechanics, immersive open world and engaging story. But for me one of
+the coolest things about the Watch Dogs games is the ambient
+storytelling of the NPCs. When you scan an NPC a nice UI element pops up
+revealing some noteworthy stats from their Blume profile. Name,
+occupation, income, a headshot, and a little blurb that humanizes them.
+That guy you just wasted wasn’t just nameless NPC fodder, he was James
+McCarthy, age 24, dental assistant. He had $3260 in his bank account and
+he regularly attends renaissance fairs. Well…attended. This little bit
+of info goes a long way toward building an immersive experience. It was
+also functional in Watch Dogs since you could see how much money an NPC
+has before draining their bank account.</p>
+<p>I wondered…how hard would it be to make a NPC generator like
+that?</p>
+<p>Let’s outline some of what we’ll want. - Name - Age - Occupation -
+Income - Marital status - Phone number - Social security number</p>
+<h3 id="name">Name</h3>
+<p>I had a large dataset of 8336 names lying around from a NFT project
+that didn’t get off the ground. That seemed like a good start. It also
+includes the name’s origin (Anglo, Arabic, Spanish, Russian, Korean,
+Japanese, Indian, and Chinese) and typical gender identity (unused).</p>
+<h3 id="phone-number">Phone number</h3>
+<p>We could just randomly generate 7 digits and an area code but we can
+do better. I found <a href="https://www.wirefly.com/area-codes">this</a>
+handy list of US area codes. We could go one step further and get common
+prefix / exchange numbers for the state that the area code belongs to,
+but for now an area code is good enough. We’re also going to randomly
+generate the line / subscriber number.</p>
+<h3 id="occupation">Occupation</h3>
+<p>You gotta make a living somehow, so let’s give our friendly NPCs some
+jobs. Finding a list of occupations online is easy. It took a little bit
+more digging to find a list with salary ranges. Now we just randomly
+index into the data table and generate a random salary within the salary
+range. Let there be jobs.</p>
+<h3 id="age">Age</h3>
+<p>Let’s give them an age and while we’re at it let’s give them a birth
+date. It’ll be easier if we start with the birth date and calculate the
+difference between today and the birthday to get their age.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_dob():</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    end <span class="op">=</span> datetime.date(<span class="dv">2004</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="co">#Most recent time</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> datetime.date(<span class="dv">1927</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="co">#Least recent time</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> end <span class="op">-</span> start <span class="co">#Difference</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    int_delta <span class="op">=</span> (delta.days <span class="op">*</span> <span class="dv">24</span> <span class="op">*</span> <span class="dv">60</span> <span class="op">*</span> <span class="dv">60</span>) <span class="op">+</span> delta.seconds </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    random_second <span class="op">=</span> random.randrange(int_delta)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> start <span class="op">+</span> datetime.timedelta(seconds<span class="op">=</span>random_second)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_age(born):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    today <span class="op">=</span> datetime.date.today()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> today.year <span class="op">-</span> born.year <span class="op">-</span> ((today.month, today.day) <span class="op">&lt;</span> (born.month, born.day))</span></code></pre></div>
+<p>Seems needlessly complicated, right? Like why is the range from 1927
+to 2004? In 2023 someone born in 2004 would be 19. Since I’m more
+focused on adding attributes than intertwining them it’s easier to cap
+all the random people to age 19 so whatever job they get is more or less
+reasonable. The upper cap on age is 96. Seems a little excessive for
+someone to be working at 96 but who am I to judge? Once we have the date
+of birth it’s trivial to calculate age.</p>
+<h3 id="marital-status">Marital status</h3>
+<p>Now that we have age we can set marital status. You can’t be married
+if you’re under 18. Sorry kids. Otherwise they have an equal shot among
+the options.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>options <span class="op">=</span> [<span class="st">&#39;Single&#39;</span>, <span class="st">&#39;Married&#39;</span>,<span class="st">&#39;Separated&#39;</span>,<span class="st">&#39;Divorced&#39;</span>,<span class="st">&#39;Widowed&#39;</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get(age):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> age <span class="op">&gt;=</span><span class="dv">18</span>:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> random.choice(options)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&#39;Single&#39;</span></span></code></pre></div>
+<h3 id="personality-type">Personality type</h3>
+<p>How about personality types? There are 16 Meyers Briggs personality
+types.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random <span class="im">as</span> r</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get():</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    first <span class="op">=</span> [<span class="st">&quot;I&quot;</span>, <span class="st">&quot;E&quot;</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    second <span class="op">=</span> [<span class="st">&quot;N&quot;</span>, <span class="st">&quot;S&quot;</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    third <span class="op">=</span> [<span class="st">&quot;T&quot;</span>, <span class="st">&quot;F&quot;</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    fourth <span class="op">=</span> [<span class="st">&quot;P&quot;</span>, <span class="st">&quot;J&quot;</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    pers <span class="op">=</span> r.choice(first) <span class="op">+</span> r.choice(second) <span class="op">+</span> r.choice(third) <span class="op">+</span> r.choice(fourth)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pers</span></code></pre></div>
+<h3 id="astrological-sign">Astrological sign</h3>
+<p>What the hell, might as well throw in astrological sign too.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get(dob):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    dob <span class="op">=</span> <span class="bu">str</span>(dob)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    dob <span class="op">=</span> dob.split(<span class="st">&#39;-&#39;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    month <span class="op">=</span> <span class="bu">int</span>(dob[<span class="dv">1</span>])</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    day <span class="op">=</span> <span class="bu">int</span>(dob[<span class="dv">2</span>])</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    astr <span class="op">=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (month<span class="op">==</span><span class="dv">1</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">20</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">2</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">18</span>):</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Aquarius&#39;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">2</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">19</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">3</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">20</span>):</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Pisces&#39;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">3</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">21</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">4</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">19</span>):</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Aries&#39;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">4</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">20</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">5</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">20</span>):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Taurus&#39;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">5</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">21</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">6</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">20</span>):</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Gemini&#39;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">6</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">21</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">7</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">22</span>):</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Cancer&#39;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">7</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">23</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">8</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">22</span>):</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Leo&#39;</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">8</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">23</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">9</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">22</span>):</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Virgo&#39;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">9</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">23</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">10</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">22</span>):</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Libra&#39;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">10</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">23</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">11</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">21</span>):</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Scorpio&#39;</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">11</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">22</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">12</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">21</span>):</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Sagittarius&#39;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (month<span class="op">==</span><span class="dv">12</span> <span class="kw">and</span> day<span class="op">&gt;=</span><span class="dv">22</span>) <span class="kw">or</span> (month<span class="op">==</span><span class="dv">1</span> <span class="kw">and</span> day<span class="op">&lt;=</span><span class="dv">19</span>):</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        astr <span class="op">=</span> <span class="st">&#39;Capricorn&#39;</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> astr</span></code></pre></div>
+<h3 id="birth-place-and-ssn">Birth place and SSN</h3>
+<p>Now to figure out where they were born. At the same time we’ll get
+them a social security number. I threw all the state data into one tsv
+sheet for easy parsing.</p>
+<pre><code>Line[0] = State name
+Line[1] = State abbreviation 
+Line[2] = State capital 
+Line[3] = SSN 1
+Line[4] = SSN 2</code></pre>
+<p>So all we do is open the tsv file, get a random line and parse it for
+the info we need.</p>
+<p>SSNs have 3 area numbers, 2 group numbers and 4 serial numbers. Each
+state has a range of area numbers. We snag the upper and lower SSN
+numbers for the person’s birth state (zfilling until we get 3 digits).
+Group and serial numbers are totally random. The whole thing is
+assembled into a string and returned.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get(line):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    s_min <span class="op">=</span> <span class="bu">int</span>(line[<span class="dv">3</span>])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    s_max <span class="op">=</span> s_min</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> line[<span class="dv">4</span>] <span class="op">!=</span> <span class="dv">0</span>:</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        s_max <span class="op">=</span> <span class="bu">int</span>(line[<span class="dv">4</span>])</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> <span class="bu">str</span>(random.randint(s_min, s_max<span class="op">+</span><span class="dv">1</span>)).zfill(<span class="dv">3</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> random.randint(<span class="dv">0</span>,<span class="dv">100</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> <span class="bu">str</span>(g).zfill(<span class="dv">2</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">str</span>(random.randint(<span class="dv">0</span>,<span class="dv">10000</span>)).zfill(<span class="dv">4</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ssn <span class="op">=</span> s <span class="op">+</span> <span class="st">&quot;-&quot;</span> <span class="op">+</span> g <span class="op">+</span> <span class="st">&quot;-&quot;</span> <span class="op">+</span> n</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ssn</span></code></pre></div>
+<h3 id="physical-attributes">Physical attributes</h3>
+<p>For fun I thought it’d be neat to add physical aspects of characters.
+Height, weight, eye color, hair color, body mass index and BMI
+class.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>eye_color <span class="op">=</span> [<span class="st">&quot;Green&quot;</span>,<span class="st">&quot;Blue&quot;</span>,<span class="st">&quot;Brown&quot;</span>,<span class="st">&quot;Hazel&quot;</span>,<span class="st">&quot;Amber&quot;</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>hair_color <span class="op">=</span> [<span class="st">&quot;Black&quot;</span>, <span class="st">&quot;Brown&quot;</span>, <span class="st">&quot;Auburn&quot;</span>,<span class="st">&quot;Red&quot;</span>,<span class="st">&quot;Blonde&quot;</span>, <span class="st">&quot;Gray&quot;</span>,<span class="st">&quot;White&quot;</span>,<span class="st">&quot;Pink&quot;</span>,<span class="st">&quot;Green&quot;</span>,<span class="st">&quot;Blue&quot;</span>,<span class="st">&quot;Orange&quot;</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get(age):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    weight <span class="op">=</span> random.randrange(<span class="dv">90</span>,<span class="dv">250</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    eye <span class="op">=</span> random.choice(eye_color)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    hair <span class="op">=</span> random.choice(hair_color)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    height1 <span class="op">=</span> random.randrange(<span class="dv">4</span>,<span class="dv">6</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    height2 <span class="op">=</span> random.randrange(<span class="dv">0</span>,<span class="dv">12</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    bmi <span class="op">=</span> <span class="bu">round</span>((weight<span class="op">/</span>(height1<span class="op">*</span><span class="dv">12</span>)<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span><span class="dv">703</span>,<span class="dv">1</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    bmi_class <span class="op">=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> bmi <span class="op">&lt;=</span><span class="fl">18.5</span>:</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        bmi_class <span class="op">=</span> <span class="st">&#39;Underweight&#39;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> bmi <span class="op">&gt;=</span><span class="fl">18.5</span> <span class="kw">and</span> bmi <span class="op">&lt;=</span> <span class="fl">24.9</span>:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        bmi_class <span class="op">=</span> <span class="st">&#39;Healthy&#39;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> bmi <span class="op">&gt;=</span><span class="fl">25.0</span> <span class="kw">and</span> bmi <span class="op">&lt;=</span><span class="fl">29.9</span>:</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        bmi_class <span class="op">=</span> <span class="st">&#39;Overweight&#39;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        bmi_class <span class="op">=</span> <span class="st">&#39;Obese&#39;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> weight,eye,hair, (height1,height2),(bmi,bmi_class)</span></code></pre></div>
+<h3 id="future-additions">Future additions</h3>
+<p>It’d be nice to procedurally generate a face based on the data we
+have so far.</p>
+<p>It’d also be nice to expand out birth places to locations other than
+the US.</p>
+<p>You can be born somewhere and not live there, so I want to delink
+those attribute generators.</p>
+<p>I made this before ChatGPT was released, so now that it’s available
+it’d be great to leverage that to generate a little blurb about the
+person.</p>
+<p>I also thought it might be fun to give them a fingerprint. I found <a
+href="http://biolab.csr.unibo.it/ResearchPages/SFinGe_Download.asp">this</a>
+Italian research site with a synthetic fingerprint generator, but it’s
+not exactly open source and they have no reason to let me play with
+their tool. I attempted to generate fingerprints in Stable Diffusion but
+they looked like garbage. I suppose I could engineer the prompts a bit
+more but I lost patience for it.</p>
+<hr />
+<p>Note: I made this tool before ChatGPT burst onto the scene like the
+Kool Aid man. ChatGPT can generate everything below with a simple
+prompt.</p>
+<p><strong>Prompt:</strong> Generate a table of 5 randomly generated
+people. Include information such as a fake phone number, fake social
+security number, age, date of birth, name, ethnicity, Meyer’s Briggs
+personality type, astrological sign and a short blurb about noteworthy
+aspects of their recent life.</p>
+<p><strong>ChatGPT:</strong> Here’s a table of 5 randomly generated
+people:</p>
+<table>
+<colgroup>
+<col style="width: 4%" />
+<col style="width: 8%" />
+<col style="width: 12%" />
+<col style="width: 2%" />
+<col style="width: 7%" />
+<col style="width: 9%" />
+<col style="width: 5%" />
+<col style="width: 3%" />
+<col style="width: 9%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr>
+<th>Person</th>
+<th>Phone Number</th>
+<th>Social Security Number</th>
+<th>Age</th>
+<th>Date of Birth</th>
+<th>Name</th>
+<th>Ethnicity</th>
+<th>MBTI</th>
+<th>Astrological Sign</th>
+<th>Recent Life Noteworthy Aspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>(555) 123-4567</td>
+<td>123-45-6789</td>
+<td>32</td>
+<td>Jan 15, 1991</td>
+<td>Sarah Johnson</td>
+<td>Caucasian</td>
+<td>ENFP</td>
+<td>Capricorn</td>
+<td>Recently started a nonprofit organization focused on youth
+education.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>(555) 987-6543</td>
+<td>987-65-4321</td>
+<td>45</td>
+<td>Oct 3, 1978</td>
+<td>Javier Rodriguez</td>
+<td>Hispanic</td>
+<td>ISTJ</td>
+<td>Libra</td>
+<td>Completed a marathon and raised funds for a local charity.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>(555) 246-8135</td>
+<td>246-81-3579</td>
+<td>28</td>
+<td>May 6, 1995</td>
+<td>Emily Chen</td>
+<td>Asian</td>
+<td>INFP</td>
+<td>Taurus</td>
+<td>Published a book of poetry and received critical acclaim.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>(555) 369-1472</td>
+<td>369-14-7258</td>
+<td>57</td>
+<td>Feb 12, 1966</td>
+<td>Michael Thompson</td>
+<td>African</td>
+<td>ENTJ</td>
+<td>Aquarius</td>
+<td>Won an award for his groundbreaking research in renewable
+energy.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>(555) 802-4679</td>
+<td>802-46-7913</td>
+<td>19</td>
+<td>Aug 22, 2004</td>
+<td>Liam Anderson</td>
+<td>Caucasian</td>
+<td>ESFP</td>
+<td>Leo</td>
+<td>Featured in a local art exhibition for his vibrant abstract
+paintings.</td>
+</tr>
+</tbody>
+</table>
+<p>Please note that the phone numbers, social security numbers, and
+personal details provided in this table are entirely fictional and do
+not correspond to real individuals.</p>
