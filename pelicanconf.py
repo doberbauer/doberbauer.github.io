@@ -4,6 +4,8 @@ SITEURL = ""
 
 PATH = "content"
 
+OUTPUT_PATH = "docs"
+
 TIMEZONE = 'America/Los_Angeles'
 
 DEFAULT_LANG = 'English'
@@ -29,7 +31,7 @@ SOCIAL = (
     ("Another social link", "#"),
 )
 
-DEFAULT_PAGINATION = False
+DEFAULT_PAGINATION = True
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
