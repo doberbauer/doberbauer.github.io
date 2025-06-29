@@ -1,3 +1,8 @@
+Title: Spy Mask
+Date: 2024-01-01 12:00
+Category: Exploration
+
+
 Recently I was playing [Sniper Ghost Warrior Contracts 2](https://en.wikipedia.org/wiki/Sniper_Ghost_Warrior_Contracts_2) (a great game that suffers from an absurdly long title) and I was intrigued by the mask overlay ability. It's a mask worn by the player that can be toggled on at any time to detect and display points of interest in the game world. A point of interest could be an anti personnel landmine, an enemy target, a climbing point, a robotic turret, CCTV camera, etc.
 I thought this was pretty cool and I love the idea of a futuristic soldier having access to oodles of data about their environment and tactical situation. 
 

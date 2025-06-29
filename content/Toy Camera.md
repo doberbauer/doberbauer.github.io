@@ -1,3 +1,8 @@
+Title: Toy Camera
+Date: 2024-01-01 12:00
+Category: Project
+
+
 ### What is Toy Camera?
 
 Toy Camera is a Raspberry Pi Zero W / OpenCV / Python project. It's a low resolution camera that can take pictures with a handful of filters. It's front-facing so you can take selfies and whatnot.

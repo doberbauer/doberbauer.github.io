@@ -1,3 +1,8 @@
+Title: Room 23
+Date: 2024-01-01 12:00
+Category: Exploration
+
+
 In season 3 Episode 7 of Lost, "Not in Portland", there's a scene in which young Karl is being subjected to a [brainwashing video](https://youtu.be/W-bVFovGMIU?t=138). Bizarre images flash before his eyes while loud drum and bass music pounds away over loud speakers. [Here's](https://youtu.be/yp024U-sH1A) the video he was watching in case your brain needs washing.
 We see [something similar](https://youtu.be/I4xis2xWI5U&t=4m8s) on an episode of House MD in season 6 entitled "Black Hole". In this case it's not torture but part of a "cognitive pattern recognition" test to map the young woman's brain so they can see what she's thinking. 
 

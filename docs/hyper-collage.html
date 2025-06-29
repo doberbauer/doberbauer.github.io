@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Hyper Collage</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="The NFT boom of 2021 opened my eyes to a whole world of generative art. While some projects were more about the memes than the art, some really..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="/category/art.html">Art</a></li>
+                                                <li><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/hyper-collage.html" rel="bookmark"
+             title="Permalink to Hyper Collage">Hyper Collage</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/art.html">Art</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>The NFT boom of 2021 opened my eyes to a whole world of generative art. While some projects were more about the memes than the art, some really neat things were being done with p5js, Processing, even Turtles. 
+They used programming and math to make beautiful procedural art and it actually looked like <em>art</em>. I liked the idea of doing something like that but the projects I worked on were more like paper dolls than abstract modern art. 
+Those projects ultimately flopped and by the next year the bottom had completely fallen out of NFTs. Nonetheless I still loved the idea of designing a script that generates art. </p>
+<p>At the time I was getting interested in web scraping a had come across the icrawler Python package. I had the idea of scraping a bunch of images and making them into a collage. It was to be a daily series where the images were pulled from the day's top articles. I'd use icrawler to download images, PIL to arrange them randomly and a instabot to upload them to Instagram. The former and latter parts didn't work quite as I'd planned but overall it worked so I'd call it a success.</p>
+<div class="highlight"><pre><span></span><code>pip install icrawler
+pip install pillow
+pip install instabot
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">icrawler.builtin</span> <span class="kn">import</span> <span class="n">GoogleImageCrawler</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rnd</span>
+<span class="kn">from</span> <span class="nn">instabot</span> <span class="kn">import</span> <span class="n">Bot</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="c1"># Parameters</span>
+
+<span class="n">today</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span>
+
+<span class="n">today2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">today</span><span class="p">,</span> <span class="n">today2</span><span class="p">]</span>
+<span class="n">number</span><span class="o">=</span><span class="mi">100</span>
+<span class="n">out_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2160</span><span class="p">,</span> <span class="mi">2160</span><span class="p">)</span>
+<span class="n">out_folder</span> <span class="o">=</span> <span class="s1">&#39;Downloads/&#39;</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+    <span class="n">googlecrawler</span> <span class="o">=</span> <span class="n">GoogleImageCrawler</span><span class="p">(</span><span class="n">storage</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;root_dir&#39;</span><span class="p">:</span><span class="n">out_folder</span><span class="p">})</span>
+      <span class="n">googlecrawler</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">keyword</span><span class="o">=</span><span class="n">c</span><span class="p">,</span><span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">max_num</span><span class="o">=</span><span class="n">number</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">imgs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">out_folder</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">out_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">imgs</span><span class="p">)):</span>
+
+    <span class="n">pWide</span><span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">out_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">imgs</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_folder</span> <span class="o">+</span> <span class="n">imgs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">wper</span> <span class="o">=</span><span class="p">(</span><span class="n">pWide</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="n">hsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">wper</span><span class="p">))))</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">pWide</span><span class="p">,</span><span class="n">hsize</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+
+    <span class="n">posX</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">out_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="n">posY</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">out_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">out</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">posX</span><span class="p">,</span> <span class="n">posY</span><span class="p">))</span>
+
+<span class="n">out</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">today</span> <span class="o">+</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;JPEG&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>I left out the instabot portion because every time it attempted to upload Instagram would block the action and send me an alert that someone was breaking into my account.</p>
+<p>The search classes for the day's top images could have been improved for sure. I could have used the Google News API to pull headlines from top stories and use those as icrawler search classes instead of variations of the day's date. </p>
+<h1>Results</h1>
+<p><strong>2022-02-01</strong>
+<img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705964577-0.jpg">
+<strong>2022-02-05</strong>
+<img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705964577-1.jpg">
+<strong>2022-02-09</strong>
+<img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705964577-2.jpg"></p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

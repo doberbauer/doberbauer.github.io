@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Désordre bronzé et noir</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="For Genuary 5 the prompt is "In the style of Vera Molnár (1924-2023)." Vera Molnár was a pioneer of computer generated artwork. I decided to make..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="/category/art.html">Art</a></li>
+                                                <li><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/desordre-bronze-et-noir.html" rel="bookmark"
+             title="Permalink to Désordre bronzé et noir">Désordre bronzé et noir</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/art.html">Art</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>For <a href="https://genuary.art/prompts#jan5">Genuary 5</a> the prompt is <em>"In the style of Vera Molnár (1924-2023)."</em></p>
+<p><a href="https://en.wikipedia.org/wiki/Vera_Moln%C3%A1r">Vera Molnár</a> was a pioneer of computer generated artwork. I decided to make my #genuary5 submission as a recreation of <a href="https://backend.artreview.com/wp-content/uploads/2022/06/1-per-Disorder-%E2%80%93-Blue-and-Red-1230x1135.jpg">1% de Desordre – Bleu + Rouge (1979)</a>, with an altered color scheme. As it turns out, what I made was actually closer to <a href="https://www.sothebys.com/en/buy/auction/2022/natively-digital-1-3-generative-art/1-de-desordre-1-of-disorder">1% de désordre (1976)</a>. In keeping with the style of the original, my final image is a quadriptych. I also made it into an animated gif, looping over 10 variations. I'm calling it "Désordre bronzé et noir" or "tan and black mess".</p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706210382-0.png"></p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706210382-1.gif"></p>
+<p>Here's how it works.</p>
+<ul>
+<li>First set the value for the height and width of the image (it's always 1:1).</li>
+<li>Next set the number of columns and rows you want. Yes it's hard coded, get over it. </li>
+<li>Set the background and line colors. Here I use tan for the background and a dark gray color for the lines.</li>
+<li><code>sqsz</code> is the square size, which is the size in pixels of each grid cell. I probably should have named it <code>cellsz</code>...</li>
+<li><code>spacing</code> is the square root of the square size. When the squares are drawn there will be this much spacing between the square and the edge of the cell. <code>2 * spacing</code> is technically the true spacing. </li>
+<li><code>inners</code> is the number of possible internal squares given <code>sqsz</code> and <code>spacing</code>. </li>
+<li><code>cellstarts</code> is the starting (upper left) X and Y coordinates for each square.</li>
+<li><code>cellends</code> is the ending (lower right) X and Y coords</li>
+</ul>
+<p>The outermost loop runs 10 times, generating 10 image variations. You can set it to whatever you want. I wanted ten for my animated gif.
+In the inner loop the PIL <code>Image</code> and <code>ImageDraw</code> objects are initialized and variations are calculated. I set things up to avoid a bunch of nested <code>if</code> statements. Not that performance was a critical factor for me, I just wanted to challenge myself to make this with as few <code>if</code> statements as possible. </p>
+<ul>
+<li><code>widths</code> is an array of line widths that's iterated through as each column and row is built out. All widths start out as <code>int(spacing/2)</code> but 3 width values are randomly chosen to be thinner or thicker.</li>
+<li><code>mult</code> is another array that's iterated through. When the outer box is drawn its width is multiplied by <code>mult</code>. The randomly chosen boxes whose widths are different will have their outer width set to zero, effectively erasing them. </li>
+<li><code>submult</code> is similar to <code>mult</code> except it only affects the inner squares, and only the cell with the thinnest lines.</li>
+</ul>
+<p>Once all these parameters are set the row and column loops begin and the boxes are drawn. 
+The last step just adds a bit of trim all the way around by pasting the image onto one that's slightly bigger.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">2000</span> <span class="c1"># Height and width of the image</span>
+<span class="n">ncell</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Number of grid columns and rows</span>
+
+<span class="n">bkg</span> <span class="o">=</span> <span class="p">(</span><span class="mi">210</span><span class="p">,</span><span class="mi">208</span><span class="p">,</span><span class="mi">193</span><span class="p">)</span> <span class="c1">#Background color</span>
+<span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="mi">74</span><span class="p">,</span><span class="mi">72</span><span class="p">,</span><span class="mi">64</span><span class="p">)</span> <span class="c1"># Line color</span>
+
+<span class="n">sqsz</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span><span class="o">/</span><span class="n">ncell</span><span class="p">)</span> <span class="c1"># Size in pixels of each grid cell</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sqsz</span><span class="p">))</span>
+<span class="n">inners</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sqsz</span> <span class="o">/</span> <span class="n">spacing</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">cellstarts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="o">+</span><span class="n">spacing</span><span class="p">,</span><span class="n">dim</span><span class="o">+</span><span class="n">spacing</span><span class="p">,</span><span class="n">sqsz</span><span class="p">)</span>
+<span class="n">cellends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">sqsz</span><span class="o">-</span><span class="n">spacing</span><span class="p">,</span><span class="n">dim</span><span class="o">+</span><span class="n">sqsz</span><span class="o">-</span><span class="n">spacing</span><span class="p">,</span><span class="n">sqsz</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">dim</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="n">bkg</span><span class="p">)</span> <span class="c1">#Image init</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="c1"># Init ImageDraw</span>
+
+    <span class="n">widths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ncell</span><span class="p">,</span><span class="n">ncell</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> 
+    <span class="n">spx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ncell</span><span class="p">),</span><span class="mi">3</span><span class="p">,</span><span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">spy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ncell</span><span class="p">),</span><span class="mi">3</span><span class="p">,</span><span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">widths</span><span class="p">[</span><span class="n">spx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">spy</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">widths</span><span class="p">[</span><span class="n">spx</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">spy</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">widths</span><span class="p">[</span><span class="n">spx</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">spy</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
+
+    <span class="n">mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ncell</span><span class="p">,</span><span class="n">ncell</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="c1">#Multiplies the special cells widths by 0</span>
+    <span class="n">mult</span><span class="p">[</span><span class="n">spx</span><span class="p">,</span><span class="n">spy</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">submult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ncell</span><span class="p">,</span><span class="n">ncell</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">submult</span><span class="p">[</span><span class="n">spx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">spy</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="k">for</span> <span class="n">rw</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cellstarts</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cellstarts</span><span class="p">)):</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">rw</span><span class="p">,</span><span class="n">col</span><span class="p">]</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">mult</span><span class="p">[</span><span class="n">rw</span><span class="p">,</span><span class="n">col</span><span class="p">]</span>
+            <span class="n">draw</span><span class="o">.</span><span class="n">rounded_rectangle</span><span class="p">([</span><span class="n">cellstarts</span><span class="p">[</span><span class="n">col</span><span class="p">],</span><span class="n">cellstarts</span><span class="p">[</span><span class="n">rw</span><span class="p">],</span>
+                            <span class="n">cellends</span><span class="p">[</span><span class="n">col</span><span class="p">],</span><span class="n">cellends</span><span class="p">[</span><span class="n">rw</span><span class="p">]],</span>
+                           <span class="n">fill</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">outline</span><span class="o">=</span><span class="n">line</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="o">*</span><span class="n">m</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">submult</span><span class="p">[</span><span class="n">rw</span><span class="p">,</span><span class="n">col</span><span class="p">],</span><span class="n">inners</span><span class="p">):</span>
+                <span class="n">subsp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">inner</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">draw</span><span class="o">.</span><span class="n">rounded_rectangle</span><span class="p">([</span><span class="n">cellstarts</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">+</span><span class="n">subsp</span><span class="p">,</span><span class="n">cellstarts</span><span class="p">[</span><span class="n">rw</span><span class="p">]</span><span class="o">+</span><span class="n">subsp</span><span class="p">,</span>
+                               <span class="n">cellends</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">-</span><span class="n">subsp</span><span class="p">,</span><span class="n">cellends</span><span class="p">[</span><span class="n">rw</span><span class="p">]</span><span class="o">-</span><span class="n">subsp</span><span class="p">],</span>
+                               <span class="n">fill</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">outline</span><span class="o">=</span><span class="n">line</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">bigger_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">,(</span><span class="n">dim</span><span class="o">+</span><span class="n">sqsz</span><span class="p">,</span><span class="n">dim</span><span class="o">+</span><span class="n">sqsz</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="n">bkg</span><span class="p">)</span>
+    <span class="n">bigger_image</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">image</span><span class="p">,(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqsz</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">sqsz</span><span class="o">/</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="n">bigger_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.jpg&quot;</span><span class="p">)</span>
+</code></pre></div>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

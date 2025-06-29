@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Multi Image Steganography</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="I have been wanting to do a steganography project of my own since I picked up my first programming language a few years ago. Where most..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li><a href="/category/art.html">Art</a></li>
+                                                <li class="active"><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/multi-image-steganography.html" rel="bookmark"
+             title="Permalink to Multi Image Steganography">Multi Image Steganography</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/exploration.html">Exploration</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>I have been wanting to do a steganography project of my own since I picked up my first programming language a few years ago.</p>
+<p>Where most steganography projects I've come across aim to secretly embed the entire message in a single image, I wanted to create a method that would encode a message across multiple images. You would need to have the entire collection of images to assemble the complete message.
+I also knew I wanted to do direct pixel manipulation rather than modifying metadata or something like that. 
+I also wanted to encode as much information as possible using the fewest pixels so the message would be difficult to detect.</p>
+<p>Each pixel of a JPG image file has 3 channels: red, green and blue. Each channel can have a value ranging from 0 to 255. 
+There are 128 standard unicode characters plus extra non-standard characters as well. </p>
+<p>Given that the message spans multiple images, it's important to also include an index denoting the order the information hidden in any particular image fits with information from others. </p>
+<p>How many pixels will we need per image?</p>
+<ul>
+<li>There are three color channels per pixel (RGB)</li>
+<li>We need a sort index + n characters encoded as integers </li>
+<li>Typical word length is 5 letters </li>
+<li>Typical sentence length is 15-20 words. </li>
+</ul>
+<p>I decided that two pixels would be sufficient. The first pixel would carry the sort index and two characters. The second pixel would carry 3 characters.
+If the message length in characters was not divisible by 5 then the remaining characters would be filled with whitespace.</p>
+<p>I'm using the first and last pixels in the image, but really any two pixels will do. Choosing pixels away from the edge would prevent loss of encoded message content via cropping.</p>
+<p>Unicode characters are converted to integers with <code>ord()</code>. </p>
+<p>The decoder converts integers to Unicode characters using <code>chr()</code>.</p>
+<h2>The Code</h2>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="n">imagesFolder</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">outDir</span><span class="p">):</span>
+   <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+   <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span> 
+   <span class="kn">import</span> <span class="nn">os</span>
+   <span class="kn">import</span> <span class="nn">math</span> 
+   <span class="n">imagePaths</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">imagesFolder</span><span class="p">)</span> 
+   <span class="n">imgCount</span> <span class="o">=</span><span class="mi">0</span>
+   <span class="n">locA</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">),</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span><span class="o">+</span><span class="mi">5</span><span class="o">&gt;</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">5</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <span class="n">chunk</span><span class="o">=</span><span class="n">chunk</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">pixA</span> <span class="o">=</span> <span class="p">(</span><span class="n">imgCount</span><span class="p">,</span><span class="nb">ord</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">ord</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">pixB</span> <span class="o">=</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">ord</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="nb">ord</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imagesFolder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">imagePaths</span><span class="p">[</span><span class="n">imgCount</span><span class="p">])</span>
+    <span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">locB</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">h</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">putpixel</span><span class="p">(</span><span class="n">locA</span><span class="p">,</span><span class="n">pixA</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">putpixel</span><span class="p">(</span><span class="n">locB</span><span class="p">,</span><span class="n">pixB</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">imagesFolder</span> <span class="o">+</span><span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">outDir</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">imgCount</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+    <span class="n">imgCount</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="n">imagesFolder</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">locA</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">imagePaths</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">imagesFolder</span><span class="p">)</span>
+    <span class="n">imgIndices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">chunks</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">imagePaths</span><span class="p">)):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imagesFolder</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">imagePaths</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">locB</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">h</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pixA</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">getpixel</span><span class="p">(</span><span class="n">locA</span><span class="p">)</span>
+        <span class="n">pixB</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">getpixel</span><span class="p">(</span><span class="n">locB</span><span class="p">)</span>
+        <span class="n">imgIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pixA</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">pixA</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="nb">chr</span><span class="p">(</span><span class="n">pixA</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="nb">chr</span><span class="p">(</span><span class="n">pixB</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="nb">chr</span><span class="p">(</span><span class="n">pixB</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="nb">chr</span><span class="p">(</span><span class="n">pixB</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+    <span class="n">imgIndices</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imgIndices</span><span class="p">)</span>
+    <span class="n">chunks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+    <span class="n">sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">imgIndices</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="n">sort</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">message</span>
+</code></pre></div>
+
+<h2>Pros</h2>
+<ul>
+<li>Only modifying two pixels so the file size should stay very similar to the original carrier. </li>
+</ul>
+<h2>Cons</h2>
+<ul>
+<li>Cropping the image may remove one or both of the message-carrying pixels.</li>
+<li>Compression may alter one or both of the message-carrying pixels.</li>
+<li>The pixel's color may be obviously different than pixels around it, tipping off the keen observer to the presence of hidden content.</li>
+<li>Long messages would require more images or more message-carrying pixels per image</li>
+</ul>
+<p><a href="https://github.com/hyperific/steganography-tools/blob/main/multi-image.py">Github link to code</a></p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

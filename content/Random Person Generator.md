@@ -1,3 +1,7 @@
+Title: Random Person Generator
+Date: 2024-01-01 12:00
+Category: Exploration
+
 The Watch Dogs video game series is known for its innovative hacking mechanics, immersive open world and engaging story. But for me one of the coolest things about the Watch Dogs games is the ambient storytelling of the NPCs. When you scan an NPC a nice UI element pops up revealing some noteworthy stats from their Blume profile. Name, occupation, income, a headshot, and a little blurb that humanizes them. That guy you just wasted wasn't just nameless NPC fodder, he was James McCarthy, age 24, dental assistant. He had $3260 in his bank account and he regularly attends renaissance fairs. Well...attended.  This little bit of info goes a long way toward building an immersive experience. It was also functional in Watch Dogs since you could see how much money an NPC has before draining their bank account.
 
 I wondered...how hard would it be to make a NPC generator like that?

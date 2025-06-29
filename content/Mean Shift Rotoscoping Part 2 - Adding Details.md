@@ -1,3 +1,7 @@
+Title: Mean Shift Rotoscoping Part 2
+Date: 2024-01-01 12:00
+Category: Art
+
 In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I guessed that Amazon's *Undone* used this technique as part of their rotoscoping pipeline. I have since found *numerous* [articles](https://www.indiewire.com/awards/industry/undone-amazon-prime-video-rotoscope-1202238213/) and [interviews](https://www.youtube.com/watch?v=J9sYE9tIwTE) explaining how the creative teams behind the show achieved its signature visual style. Mean shift filtering wasn't mentioned. 
 
 That being said, I think it's an interesting approach and I wanted to improve upon it. Mean Shift does a great job of smoothing out fine detail while preserving coarse detail, but I wanted to add some details back in to really lock in that rotoscoped style. The artists behind *Undone* clearly put a lot of emphasis on character's [facial expressions](https://deadline.com/wp-content/uploads/2019/06/screen-shot-2019-06-07-at-10.28.54-am.png?w=1024), using thick dark lines to define facial features much in the way [comic artists do](https://d1466nnw0ex81e.cloudfront.net/n_iv/600/651895.jpg). I figured I could achieve something similar with a little computer vision. For examples to follow I used [this](https://www.pexels.com/video/a-woman-standing-by-the-riverside-smiling-for-the-camera-3253738/) video from Pexels.

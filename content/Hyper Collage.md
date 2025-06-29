@@ -1,3 +1,7 @@
+Title: Hyper Collage
+Date: 2024-01-01 12:00
+Category: Art
+
 The NFT boom of 2021 opened my eyes to a whole world of generative art. While some projects were more about the memes than the art, some really neat things were being done with p5js, Processing, even Turtles. 
 They used programming and math to make beautiful procedural art and it actually looked like *art*. I liked the idea of doing something like that but the projects I worked on were more like paper dolls than abstract modern art. 
 Those projects ultimately flopped and by the next year the bottom had completely fallen out of NFTs. Nonetheless I still loved the idea of designing a script that generates art. 

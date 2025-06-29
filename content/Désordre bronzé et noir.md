@@ -1,3 +1,8 @@
+Title: Désordre bronzé et noir
+Date: 2024-01-01 12:00
+Category: Art
+
+
 For [Genuary 5](https://genuary.art/prompts#jan5) the prompt is *"In the style of Vera Molnár (1924-2023)."*
 
 [Vera Molnár](https://en.wikipedia.org/wiki/Vera_Moln%C3%A1r) was a pioneer of computer generated artwork. I decided to make my #genuary5 submission as a recreation of [1% de Desordre – Bleu + Rouge (1979)](https://backend.artreview.com/wp-content/uploads/2022/06/1-per-Disorder-%E2%80%93-Blue-and-Red-1230x1135.jpg), with an altered color scheme. As it turns out, what I made was actually closer to [1% de désordre (1976)](https://www.sothebys.com/en/buy/auction/2022/natively-digital-1-3-generative-art/1-de-desordre-1-of-disorder). In keeping with the style of the original, my final image is a quadriptych. I also made it into an animated gif, looping over 10 variations. I'm calling it "Désordre bronzé et noir" or "tan and black mess".

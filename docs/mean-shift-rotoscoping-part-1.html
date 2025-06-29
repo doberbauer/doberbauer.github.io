@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Mean Shift Rotoscoping Part 1</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="My wife and I watched a few episodes of Undone the other night on Prime Video. What struck me immediately, other than Rosa Salazar's authentic..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="/category/art.html">Art</a></li>
+                                                <li><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/mean-shift-rotoscoping-part-1.html" rel="bookmark"
+             title="Permalink to Mean Shift Rotoscoping Part 1">Mean Shift Rotoscoping Part 1</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/art.html">Art</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>My wife and I watched a few episodes of <em>Undone</em> the other night on Prime Video. What struck me immediately, other than Rosa Salazar's authentic performance, was the <a href="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftvseriesfinale.com%2Fwp-content%2Fuploads%2F2019%2F11%2Fundone.jpg&amp;f=1&amp;nofb=1&amp;ipt=c9411f208ec31e40c62835bffc52498768b1fef52a265f580896b565bc3ff151&amp;ipo=images">visual style</a>. I've seen rotoscoped films before like <a href="https://en.wikipedia.org/wiki/Waking_Life">Waking Life</a> and <a href="https://en.wikipedia.org/wiki/A_Scanner_Darkly_(film)">A Scanner Darkly</a> (both Richard Linklater films), but this was noticeably different. When you rotoscope entirely by hand there are noticeable <a href="https://youtu.be/xX10vQEa56E">frame-to-frame inconsistencies</a> in texture, line direction, stroke length and width, etc that make the whole frame <a href="https://youtu.be/hkjDUERgCQw?t=26">feel alive</a> (look at this guy's shirt for example). <em>Undone</em> <a href="https://youtu.be/6uWCNHQgfnc?t=10">didn't have those</a>. I wondered how they could have achieved this and immediately suspected they had some computational help. I've been working with a lot of clustering algorithms for work and recently stumbled upon Mean Shift clustering / segmentation. I wondered if they used something like that to achieve the aforementioned effect in <em>Undone</em>. </p>
+<p>You're forgiven if you're unfamiliar with mean shift clustering. I only came across it recently myself. Imagine the input dataset as a landscape with peaks and valleys, where the height at each point represents the density of data points. The mean shift algorithm operates by placing a kernel at each data point and iteratively moving it towards the direction of steepest ascent, which corresponds to regions of higher density. As the kernel moves, it is influenced by the gradient of the density function, causing it to shift more significantly in regions with a higher concentration of nearby data points. When applied to image data you end up with this cool color blending effect that looks a bit like someone put a cartoon filter on reality.</p>
+<p>I wanted to put this to the test so I did a little searching. I found that OpenCV has a mean shift filter and it does what I want. Per my usual ~~laziness~~ resourcefulness when it comes to flights of fancy, I turned to ChatGPT to do the work. Some embellishments have been made...</p>
+<blockquote>
+<p>Me: "ChatGPT, noble and benevolent AI overlord, please produce Python code to use OpenCV meanshift filtering on video"</p>
+<p>ChatGPT: "Certainly my kind and loyal underling, my favorite among the fleshlings! Here's an example of Python code that uses OpenCV's mean shift filtering on a video:"</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="k">def</span> <span class="nf">mean_shift_filtering</span><span class="p">(</span><span class="n">video_path</span><span class="p">):</span>
+    <span class="c1"># Open the video file</span>
+    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+
+    <span class="c1"># Get the video properties</span>
+    <span class="n">frame_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">))</span>
+    <span class="n">frame_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">))</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">)</span>
+
+    <span class="c1"># Create a VideoWriter object to save the filtered video</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;filtered_video.avi&#39;</span>
+    <span class="n">fourcc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="s1">&#39;XVID&#39;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">fourcc</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="p">(</span><span class="n">frame_width</span><span class="p">,</span> <span class="n">frame_height</span><span class="p">))</span>
+
+    <span class="c1"># Loop through each frame of the video</span>
+    <span class="k">while</span> <span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Perform mean shift filtering</span>
+        <span class="n">shifted_frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrMeanShiftFiltering</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">sp</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+        <span class="c1"># Display the filtered frame</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s1">&#39;Filtered Frame&#39;</span><span class="p">,</span> <span class="n">shifted_frame</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Write the filtered frame to the output video file</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">shifted_frame</span><span class="p">)</span>
+
+    <span class="c1"># Release the video capture and writer objects</span>
+    <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+    <span class="c1"># Close all OpenCV windows</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean shift filtering complete. Saved filtered video as&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+</code></pre></div>
+
+<p>I tried it on some stock video clips
+- Pexels Hot air balloons <a href="https://www.pexels.com/video/couple-walking-down-the-road-towards-the-hot-air-balloon-festival-3018542/">Original</a> | <a href="https://youtu.be/HVqM6kZnpxQ">Mean Shift Rotoscoped</a>
+- Pexels Cloudy skyline <a href="https://www.pexels.com/video/buildings-with-a-foggy-background-in-timelapse-mode-2015875/">Original</a> | <a href="https://youtu.be/uV73n_-wVRA">Mean Shift Rotoscoped</a>
+- Pexels Lovey dovey couple <a href="https://www.pexels.com/video/a-couple-in-a-public-display-of-affection-3191106/">Original</a> | <a href="https://youtu.be/aE6Hzj72z8g">Mean Shift Rotoscoped</a>
+- Timelapse I shot at Lake Tahoe <a href="https://youtu.be/lSzWJM8Xlls">Original</a> | <a href="https://youtu.be/e0vifOglOcw">Mean Shift Rotoscoped</a></p>
+<p><em>Undone</em> <strong>certainly</strong> used multiple techniques to achieve their particular look, including 3D modeling, classical rotoscoping, etc. Based on what I've come up with I would bet that their visual processing pipeline involves mean shift filtering. If nothing else it's the first pass upon which artists would fill in details. </p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

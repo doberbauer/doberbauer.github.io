@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Mean Shift Rotoscoping Part 2</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="/category/art.html">Art</a></li>
+                                                <li><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/mean-shift-rotoscoping-part-2.html" rel="bookmark"
+             title="Permalink to Mean Shift Rotoscoping Part 2">Mean Shift Rotoscoping Part 2</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/art.html">Art</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I guessed that Amazon's <em>Undone</em> used this technique as part of their rotoscoping pipeline. I have since found <em>numerous</em> <a href="https://www.indiewire.com/awards/industry/undone-amazon-prime-video-rotoscope-1202238213/">articles</a> and <a href="https://www.youtube.com/watch?v=J9sYE9tIwTE">interviews</a> explaining how the creative teams behind the show achieved its signature visual style. Mean shift filtering wasn't mentioned. </p>
+<p>That being said, I think it's an interesting approach and I wanted to improve upon it. Mean Shift does a great job of smoothing out fine detail while preserving coarse detail, but I wanted to add some details back in to really lock in that rotoscoped style. The artists behind <em>Undone</em> clearly put a lot of emphasis on character's <a href="https://deadline.com/wp-content/uploads/2019/06/screen-shot-2019-06-07-at-10.28.54-am.png?w=1024">facial expressions</a>, using thick dark lines to define facial features much in the way <a href="https://d1466nnw0ex81e.cloudfront.net/n_iv/600/651895.jpg">comic artists do</a>. I figured I could achieve something similar with a little computer vision. For examples to follow I used <a href="https://www.pexels.com/video/a-woman-standing-by-the-riverside-smiling-for-the-camera-3253738/">this</a> video from Pexels.</p>
+<h2>Face Recognition</h2>
+<p>I was searching GitHub for a good Eulerian video magnification Python implementation (for an upcoming project / blog post) and I stumbled upon <a href="https://github.com/ageitgey/face_recognition/tree/master">Face Recognition</a>, a lovely Python package for detecting and manipulating faces in video and images. The <code>face_landmarks</code> method caught my eye as it could recognize facial landmarks like eyes, nose, chin, mouth, eye brows, etc. It looked pretty dang cool so thought I'd gave it a whirl. Face Recognition requires Mac or Linux and unfortunately I had neither, nor did I have the patience to follow Face Recognition's  unofficial Windows installation guide. Instead I opted to set it up in a Google Colab notebook. I threw my existing mean shift script in, sprinkled in the code to detect and draw facial landmarks and let 'er rip. 90 minutes of free Google GPU compute time later and the results were... unimpressive. Don't get me wrong, Face Recognition was great: it was able to identify face landmarks and I could render them out to a mean shift rotoscoped frame. What didn't impressive me was how the landmark lines didn't flow very well. They looked blocky and obviously artificial. Each facial feature was essentially a list of points and the method I was using to draw them simply connected the dots iteratively. This was not ideal. If I wanted to even come close to the visual style of <em>Undone</em> I'd need to do better.</p>
+<p><a href="https://youtu.be/K1OG2nO3hrg">See for yourself</a></p>
+<p>Here's the Google Colab notebook so you can try it yourself. </p>
+<p><a href="https://colab.research.google.com/drive/1mZdg8yb8EHEddoHiwENXHqrFHQYkqVIX?usp=sharing">AutoRotoscope (Face Recognition - Blocky)</a></p>
+<h2>Facial Recognition + NURBS</h2>
+<p>So I had a list of points but they were just being connected one after the next with lines. But with so few points, connecting them in this fashion looked like the 2D equivalent of a <a href="https://imgur.io/89p2Gzx?r">low polycount character from a PS1 era game</a>. What I needed was more points. 
+After much head-scratching and foolish attempts to generate and interpolate along splines and bezier curves, I was eventually reminded of NURBS. Non-Uniform Rational B-Splines or NURBS (I like NURBS better — it's like the <a href="https://knowyourmeme.com/memes/ermahgerd">Ermahgerd Gersberms</a> girl <a href="https://chat.openai.com/share/50675628-1a3d-4524-b991-699dd552855b">saying 'noobs'</a>) are great for representing surfaces in 2D and 3D space. I could build a NURBS curve from sparse points and then get however many points I wanted interpolated along the surface. With enough points the eye won't even see the individual straight lines, it'll just see a nice organic curve.
+A quick search introduced me to <a href="https://github.com/orbingol/NURBS-Python/tree/8ae8b127eb0b130a25a6c81e98e90f319733bca0">geomdl</a>, a terrific implementation of NURBS for Python. Implementing it was a breeze and it only took a few lines to create and interpolate along a NURBS curve. The results were an improvement from the raw <code>facial_landmarks</code> output. </p>
+<p><a href="https://youtu.be/hbS4ogziZ4g">See for yourself</a></p>
+<p>Here's another Google Colab notebook if you'd like to try it out. </p>
+<p><a href="https://colab.research.google.com/drive/1yTU9Yra7AcvOawIVahuXFhebvpTh-xVZ?usp=sharing">AutoRotoscope (Face Recognition - NURBS)</a></p>
+<h2>Facepalm 🤦‍♂️</h2>
+<p>I was still unsatisfied though. The NURBS curve improved how the facial landmarks were drawn, but they still just didn't look right. The effect looked forced and lacked artfulness. On top of that, when Face Recognition failed to detect a face the effect would disappear. Perhaps equally uncanny was when it misidentified facial landmarks and lines would be drawn where they didn't belong.
+This was really not the application <code>facial_landmarks</code> was meant for so I decided to look for other solutions.
+Then an obvious one occurred to me - why not just do edge detection? Use the original frame before rotoscoping, detect edges in it and overlay those edges onto the rotoscoped frame. It'd work regardless of there being a face in the frame and I imagined it'd be computationally much quicker to do.
+Honestly when that thought occurred to me I was shocked how much time I sunk into Face Recognition when such an obvious solution was right in front of me. On the plus side, I learned about some cool packages and even though drawing facial landmarks didn't look great I did get it working in the end. 
+Anyway, back to edge detection!
+I looked like OpenCV's <a href="https://docs.opencv.org/3.4/da/d22/tutorial_py_canny.html">Canny Edge Detection</a> would do the trick and hey — it was already in OpenCV which I was using for everything else! One less dependency! And a nice bonus for me — I could run it on my Windows machine again. The edges that come out of Canny are white and the background is black, but a quick bitwise_not operation to invert them would take care of that.
+They were also quite thin and sometimes difficult to see, so I used OpenCV's <a href="https://docs.opencv.org/3.4/db/df6/tutorial_erosion_dilatation.html"><code>dilate</code></a> function to thicken them up a bit. <code>dilate</code> works on white pixels so this had to happen before inverting. The results, in my opinion, looked a <strong>hell</strong> of a lot better than anything that came out of Face Recognition and certainly better than mean shift alone. <a href="https://youtu.be/QIekVx3svRw">See for yourself</a>.
+I exposed the Canny Edge Detection thresholds and dilation kernel size to give more control over which edges are detected and how much they're thickened. </p>
+<p>You can play with it <a href="https://colab.research.google.com/drive/1sKbdY6mbhxxu_fx7QwwQhg1e6TuRsTdD?usp=sharing">here</a>. </p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

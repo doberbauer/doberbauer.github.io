@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Random Person Generator</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="The Watch Dogs video game series is known for its innovative hacking mechanics, immersive open world and engaging story. But for me one of the..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li><a href="/category/art.html">Art</a></li>
+                                                <li class="active"><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/random-person-generator.html" rel="bookmark"
+             title="Permalink to Random Person Generator">Random Person Generator</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/exploration.html">Exploration</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>The Watch Dogs video game series is known for its innovative hacking mechanics, immersive open world and engaging story. But for me one of the coolest things about the Watch Dogs games is the ambient storytelling of the NPCs. When you scan an NPC a nice UI element pops up revealing some noteworthy stats from their Blume profile. Name, occupation, income, a headshot, and a little blurb that humanizes them. That guy you just wasted wasn't just nameless NPC fodder, he was James McCarthy, age 24, dental assistant. He had $3260 in his bank account and he regularly attends renaissance fairs. Well...attended.  This little bit of info goes a long way toward building an immersive experience. It was also functional in Watch Dogs since you could see how much money an NPC has before draining their bank account.</p>
+<p>I wondered...how hard would it be to make a NPC generator like that?</p>
+<p>Let's outline some of what we'll want.
+- Name
+- Age
+- Occupation
+- Income
+- Marital status 
+- Phone number 
+- Social security number </p>
+<h3>Name</h3>
+<p>I had a large dataset of 8336 names lying around from a NFT project that didn't get off the ground. That seemed like a good start. It also includes the name's origin (Anglo, Arabic, Spanish, Russian, Korean, Japanese, Indian, and Chinese) and typical gender identity (unused).</p>
+<h3>Phone number</h3>
+<p>We could just randomly generate 7 digits and an area code but we can do better. I found <a href="https://www.wirefly.com/area-codes">this</a> handy list of US area codes. We could go one step further and get common prefix / exchange numbers for the state that the area code belongs to, but for now an area code is good enough. We're also going to randomly generate the line / subscriber number. </p>
+<h3>Occupation</h3>
+<p>You gotta make a living somehow, so let's give our friendly NPCs some jobs. Finding a list of occupations online is easy. It took a little bit more digging to find a list with salary ranges. Now we just randomly index into the data table and generate a random salary within the salary range. Let there be jobs. </p>
+<h3>Age</h3>
+<p>Let's give them an age and while we're at it let's give them a birth date. It'll be easier if we start with the birth date and calculate the difference between today and the birthday to get their age. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="k">def</span> <span class="nf">get_dob</span><span class="p">():</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2004</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#Most recent time</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">1927</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#Least recent time</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span> <span class="c1">#Difference</span>
+    <span class="n">int_delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">days</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span> <span class="o">+</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span> 
+    <span class="n">random_second</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">int_delta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">start</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">random_second</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calculate_age</span><span class="p">(</span><span class="n">born</span><span class="p">):</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="n">born</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="p">((</span><span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">born</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">born</span><span class="o">.</span><span class="n">day</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Seems needlessly complicated, right? 
+Like why is the range from 1927 to 2004? 
+In 2023 someone born in 2004 would be 19. Since I'm more focused on adding attributes than intertwining them it's easier to cap all the random people to age 19 so whatever job they get is more or less reasonable. The upper cap on age is 96. Seems a little excessive for someone to be working at 96 but who am I to judge? 
+Once we have the date of birth it's trivial to calculate age. </p>
+<h3>Marital status</h3>
+<p>Now that we have age we can set marital status. You can't be married if you're under 18. Sorry kids. Otherwise they have an equal shot among the options.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Single&#39;</span><span class="p">,</span> <span class="s1">&#39;Married&#39;</span><span class="p">,</span><span class="s1">&#39;Separated&#39;</span><span class="p">,</span><span class="s1">&#39;Divorced&#39;</span><span class="p">,</span><span class="s1">&#39;Widowed&#39;</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">age</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">age</span> <span class="o">&gt;=</span><span class="mi">18</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;Single&#39;</span>
+</code></pre></div>
+
+<h3>Personality type</h3>
+<p>How about personality types? 
+There are 16 Meyers Briggs personality types. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">r</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">]</span>
+    <span class="n">second</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">]</span>
+    <span class="n">third</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+    <span class="n">fourth</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">]</span>
+    <span class="n">pers</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">first</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">second</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">third</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">fourth</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pers</span>
+</code></pre></div>
+
+<h3>Astrological sign</h3>
+<p>What the hell, might as well throw in astrological sign too.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">dob</span><span class="p">):</span>
+    <span class="n">dob</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">dob</span><span class="p">)</span>
+    <span class="n">dob</span> <span class="o">=</span> <span class="n">dob</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dob</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dob</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">20</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">18</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Aquarius&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">19</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Pisces&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">21</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">19</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Aries&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">20</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">5</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Taurus&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">5</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">21</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">6</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Gemini&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">6</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">21</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">7</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">22</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Cancer&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">7</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">23</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">8</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">22</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Leo&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">8</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">23</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">9</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">22</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Virgo&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">9</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">23</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">10</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">22</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Libra&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">10</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">23</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">11</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">21</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Scorpio&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">11</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">22</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">12</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">21</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Sagittarius&#39;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">12</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&gt;=</span><span class="mi">22</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">month</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">day</span><span class="o">&lt;=</span><span class="mi">19</span><span class="p">):</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Capricorn&#39;</span>
+    <span class="k">return</span> <span class="n">astr</span>
+</code></pre></div>
+
+<h3>Birth place and SSN</h3>
+<p>Now to figure out where they were born. At the same time we'll get them a social security number. 
+I threw all the state data into one tsv sheet for easy parsing. </p>
+<div class="highlight"><pre><span></span><code>Line[0] = State name
+Line[1] = State abbreviation 
+Line[2] = State capital 
+Line[3] = SSN 1
+Line[4] = SSN 2
+</code></pre></div>
+
+<p>So all we do is open the tsv file, get a random line and parse it for the info we need. </p>
+<p>SSNs have 3 area numbers, 2 group numbers and 4 serial numbers. 
+Each state has a range of area numbers.
+We snag the upper and lower SSN numbers  for the person's birth state (zfilling until we get 3 digits). 
+Group and serial numbers are totally random. The whole thing is assembled into a string and returned.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="n">s_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">s_max</span> <span class="o">=</span> <span class="n">s_min</span>
+    <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">s_min</span><span class="p">,</span> <span class="n">s_max</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10000</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">ssn</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">g</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="n">ssn</span>
+</code></pre></div>
+
+<h3>Physical attributes</h3>
+<p>For fun I thought it'd be neat to add physical aspects of characters. Height, weight, eye color, hair color, body mass index and BMI class. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="n">eye_color</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Green&quot;</span><span class="p">,</span><span class="s2">&quot;Blue&quot;</span><span class="p">,</span><span class="s2">&quot;Brown&quot;</span><span class="p">,</span><span class="s2">&quot;Hazel&quot;</span><span class="p">,</span><span class="s2">&quot;Amber&quot;</span><span class="p">]</span>
+<span class="n">hair_color</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Black&quot;</span><span class="p">,</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span> <span class="s2">&quot;Auburn&quot;</span><span class="p">,</span><span class="s2">&quot;Red&quot;</span><span class="p">,</span><span class="s2">&quot;Blonde&quot;</span><span class="p">,</span> <span class="s2">&quot;Gray&quot;</span><span class="p">,</span><span class="s2">&quot;White&quot;</span><span class="p">,</span><span class="s2">&quot;Pink&quot;</span><span class="p">,</span><span class="s2">&quot;Green&quot;</span><span class="p">,</span><span class="s2">&quot;Blue&quot;</span><span class="p">,</span><span class="s2">&quot;Orange&quot;</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">age</span><span class="p">):</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">250</span><span class="p">)</span>
+    <span class="n">eye</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">eye_color</span><span class="p">)</span>
+    <span class="n">hair</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">hair_color</span><span class="p">)</span>
+    <span class="n">height1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">height2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">bmi</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">weight</span><span class="o">/</span><span class="p">(</span><span class="n">height1</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">703</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bmi_class</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">bmi</span> <span class="o">&lt;=</span><span class="mf">18.5</span><span class="p">:</span>
+        <span class="n">bmi_class</span> <span class="o">=</span> <span class="s1">&#39;Underweight&#39;</span>
+    <span class="k">elif</span> <span class="n">bmi</span> <span class="o">&gt;=</span><span class="mf">18.5</span> <span class="ow">and</span> <span class="n">bmi</span> <span class="o">&lt;=</span> <span class="mf">24.9</span><span class="p">:</span>
+        <span class="n">bmi_class</span> <span class="o">=</span> <span class="s1">&#39;Healthy&#39;</span>
+    <span class="k">elif</span> <span class="n">bmi</span> <span class="o">&gt;=</span><span class="mf">25.0</span> <span class="ow">and</span> <span class="n">bmi</span> <span class="o">&lt;=</span><span class="mf">29.9</span><span class="p">:</span>
+        <span class="n">bmi_class</span> <span class="o">=</span> <span class="s1">&#39;Overweight&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bmi_class</span> <span class="o">=</span> <span class="s1">&#39;Obese&#39;</span>
+    <span class="k">return</span> <span class="n">weight</span><span class="p">,</span><span class="n">eye</span><span class="p">,</span><span class="n">hair</span><span class="p">,</span> <span class="p">(</span><span class="n">height1</span><span class="p">,</span><span class="n">height2</span><span class="p">),(</span><span class="n">bmi</span><span class="p">,</span><span class="n">bmi_class</span><span class="p">)</span>
+</code></pre></div>
+
+<h3>Future additions</h3>
+<p>It'd be nice to procedurally generate a face based on the data we have so far. </p>
+<p>It'd also be nice to expand out birth places to locations other than the US. </p>
+<p>You can be born somewhere and not live there, so I want to delink those attribute generators. </p>
+<p>I made this before ChatGPT was released, so now that it's available it'd be great to leverage that to generate a little blurb about the person. </p>
+<p>I also thought it might be fun to give them a fingerprint. I found <a href="http://biolab.csr.unibo.it/ResearchPages/SFinGe_Download.asp">this</a> Italian research site with a synthetic fingerprint generator, but it's not exactly open source and they have no reason to let me play with their tool. I attempted to generate fingerprints in Stable Diffusion but they looked like garbage. I suppose I could engineer the prompts a bit more but I lost patience for it. </p>
+<hr>
+<p>Note: I made this tool before ChatGPT burst onto the scene like the Kool Aid man. ChatGPT can generate everything below with a simple prompt.</p>
+<p><strong>Prompt:</strong>
+Generate a table of 5 randomly generated people. Include information such as a fake phone number, fake social security number, age, date of birth, name, ethnicity, Meyer's Briggs personality type, astrological sign and a short blurb about noteworthy aspects of their recent life.</p>
+<p><strong>ChatGPT:</strong>
+Here's a table of 5 randomly generated people:</p>
+<table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Phone Number</th>
+<th>Social Security Number</th>
+<th>Age</th>
+<th>Date of Birth</th>
+<th>Name</th>
+<th>Ethnicity</th>
+<th>MBTI</th>
+<th>Astrological Sign</th>
+<th>Recent Life Noteworthy Aspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>(555) 123-4567</td>
+<td>123-45-6789</td>
+<td>32</td>
+<td>Jan 15, 1991</td>
+<td>Sarah Johnson</td>
+<td>Caucasian</td>
+<td>ENFP</td>
+<td>Capricorn</td>
+<td>Recently started a nonprofit organization focused on youth education.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>(555) 987-6543</td>
+<td>987-65-4321</td>
+<td>45</td>
+<td>Oct 3, 1978</td>
+<td>Javier Rodriguez</td>
+<td>Hispanic</td>
+<td>ISTJ</td>
+<td>Libra</td>
+<td>Completed a marathon and raised funds for a local charity.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>(555) 246-8135</td>
+<td>246-81-3579</td>
+<td>28</td>
+<td>May 6, 1995</td>
+<td>Emily Chen</td>
+<td>Asian</td>
+<td>INFP</td>
+<td>Taurus</td>
+<td>Published a book of poetry and received critical acclaim.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>(555) 369-1472</td>
+<td>369-14-7258</td>
+<td>57</td>
+<td>Feb 12, 1966</td>
+<td>Michael Thompson</td>
+<td>African</td>
+<td>ENTJ</td>
+<td>Aquarius</td>
+<td>Won an award for his groundbreaking research in renewable energy.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>(555) 802-4679</td>
+<td>802-46-7913</td>
+<td>19</td>
+<td>Aug 22, 2004</td>
+<td>Liam Anderson</td>
+<td>Caucasian</td>
+<td>ESFP</td>
+<td>Leo</td>
+<td>Featured in a local art exhibition for his vibrant abstract paintings.</td>
+</tr>
+</tbody>
+</table>
+<p>Please note that the phone numbers, social security numbers, and personal details provided in this table are entirely fictional and do not correspond to real individuals.</p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

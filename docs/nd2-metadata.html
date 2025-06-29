@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>ND2 Metadata</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="ND2 Metadata This morning I was faced with the task of opening 114 microscope image files, opening up the image properties and jotting down the..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li><a href="/category/art.html">Art</a></li>
+                                                <li class="active"><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/nd2-metadata.html" rel="bookmark"
+             title="Permalink to ND2 Metadata">ND2 Metadata</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/exploration.html">Exploration</a>.</p>
+        
+</footer><!-- /.post-info -->        <h1>ND2 Metadata</h1>
+<p>This morning I was faced with the task of opening 114 microscope image files, opening up the image properties and jotting down the image width and height. 
+To make matters worse, the program to open those files can only be used if you are</p>
+<p>A. physically at your computer and have a HASP key plugged in</p>
+<p>or </p>
+<p>B. using Google Chrome's remote desktop extension, which is painfully slow and sometimes just stops working for no apparent reason</p>
+<p>I have been dabbling with the <a href="https://pypi.org/project/nd2/">nd2</a> package to automate some other tedious tasks like grabbing excitation wavelengths, channel names, image dimensions and other bits of metadata. I wrote a little script using this gem of a package to fetch the metadata from every file, index into it, fetch the properties I want and append them to a list.</p>
+<div class="highlight"><pre><span></span><code><span class="n">paths</span> <span class="o">=</span> <span class="p">[</span> <span class="o">&lt;</span><span class="n">all_the_paths</span><span class="o">&gt;</span> <span class="p">]</span> 
+<span class="n">width</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">height</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">nd2</span><span class="o">.</span><span class="n">ND2File</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="c1"># load image</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">unstructured_metadata</span><span class="p">()</span>
+    <span class="n">width</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="n">ImageAttributesLV</span><span class="s2">&quot;&quot;</span><span class="p">][</span><span class="s2">&quot;&quot;</span><span class="n">SLxImageAttributes</span><span class="s2">&quot;&quot;</span><span class="p">][</span><span class="s2">&quot;&quot;</span><span class="n">Width</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">height</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="n">ImageAttributesLV</span><span class="s2">&quot;&quot;</span><span class="p">][</span><span class="s2">&quot;&quot;</span><span class="n">SLxImageAttributes</span><span class="s2">&quot;&quot;</span><span class="p">][</span><span class="s2">&quot;&quot;</span><span class="n">Height</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+</code></pre></div>
+
+<p>It took a few minutes to write the script.
+It took roughly 5 seconds to run.</p>
+<p>Just for fun I timed how long it took to open a single file in the image viewer program, open up the image properties window and jot down the metadata. It took 21.26 seconds from start to finish, mostly due to the dimensions property not being selectable in the program so I couldn't just copy/paste I had to type it out. Assuming I was working at a constant rate it would have taken me 39.9 minutes to get the dimensions for all 114 files.</p>
+<p>The time I saved has been repurposed to write this post. </p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

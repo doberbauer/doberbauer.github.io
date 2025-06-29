@@ -1,3 +1,7 @@
+Title: I've Gone to Plaid
+Date: 2024-01-01 12:00
+Category: Art
+
 This is an exercise I did to keep myself busy while processing data. 
 
 It's a procedural plaid pattern generator written in Python. It produces a Gingham, Buffalo or plaid pattern with procedural colors and design elements.

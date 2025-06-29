@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Daniel Oberbauer - Art</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="/category/art.html">Art</a></li>
+                                                <li><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="/colorful-circles.html">Colorful Circles</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/art.html">Art</a>.</p>
+        
+</footer><!-- /.post-info --><p>January 1st marked the first day of <a href="https://genuary.art/">Genuary</a>! 
+Genuary is an annual celebration of <a href="https://en.wikipedia.org/wiki/Generative_art">generative art</a>. If you're a regular reader of this blog you'll know that I love generative art. I'm not very good at it, but you can't get better at a thing unless you practice and that's what I want to get out of my art projects in the month of ~~January~~ Genuary. </p>
+<p>The prompt for Genuary1 is <em>"Particles, lots of them."</em></p>
+<p>As such here is my script that randomly placed randomly sized circles with randomly picked colors from a color map. </p>
+<p><a href="https://gist.github.com/hyperific/d6ec03e6d7c3284517a883290aab4b74">View on Github</a></p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706084533-0.jpg"></p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706134692-1.jpg"></p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706134692-0.jpg"></p>
+<p>I wrote it on my phone using <a href="https://play.google.com/store/apps/details?id=ru.iiec.pydroid3">Pydroid3</a> and I sized the output so I could use it as my phone's background.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1">#Parameters</span>
+<span class="n">color_map</span> <span class="o">=</span> <span class="s2">&quot;viridis&quot;</span>
+<span class="n">ncolors</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span>
+<span class="n">height</span> <span class="o">=</span> <span class="mi">1600</span>
+<span class="n">circles</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">width</span> <span class="o">*=</span> <span class="mi">2</span>
+<span class="n">height</span> <span class="o">*=</span> <span class="mi">2</span>
+
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">color_map</span><span class="p">)</span> <span class="c1">#Colormap init</span>
+
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cmap</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">ncolors</span><span class="p">)])[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">*</span><span class="mi">255</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="o">*</span><span class="mi">255</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">])</span>
+
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span> <span class="c1">#Image init</span>
+<span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="c1"># Init ImageDraw</span>
+
+
+<span class="k">for</span> <span class="n">circle</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">circles</span><span class="p">):</span>
+    <span class="n">ulx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">uly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">random_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">lrx</span> <span class="o">=</span> <span class="n">ulx</span> <span class="o">+</span> <span class="n">random_offset</span>
+    <span class="n">lry</span> <span class="o">=</span> <span class="n">uly</span> <span class="o">+</span> <span class="n">random_offset</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ncolors</span><span class="p">),:])</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">ellipse</span><span class="p">((</span><span class="n">ulx</span><span class="p">,</span> <span class="n">uly</span><span class="p">,</span> <span class="n">lrx</span><span class="p">,</span> <span class="n">lry</span><span class="p">),</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">outline</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">ellipse</span><span class="p">((</span><span class="n">ulx</span><span class="p">,</span> <span class="n">uly</span><span class="p">,</span> <span class="n">lrx</span><span class="p">,</span> <span class="n">lry</span><span class="p">),</span> <span class="n">fill</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">outline</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+    <span class="c1"># Upper left coords, then lower right coords</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">width</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> <span class="n">resample</span><span class="o">=</span><span class="n">Image</span><span class="o">.</span><span class="n">Resampling</span><span class="o">.</span><span class="n">LANCZOS</span><span class="p">)</span>
+
+<span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;out.png&quot;</span><span class="p">)</span>
+</code></pre></div>                    </article>
+                </aside><!-- /#featured -->
+                    </ol><!-- /#posts-list -->
+  <nav>
+    <ul>
+      <li>Page 1 / 9</li>
+        <li><a href="/category/art2.html">&rang;</a></li>
+        <li><a href="/category/art9.html">&Rang;</a></li>
+    </ul>
+  </nav>
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

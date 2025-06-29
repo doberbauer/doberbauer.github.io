@@ -1,3 +1,7 @@
+Title: Motion Extraction
+Date: 2024-01-01 12:00
+Category: Exploration
+
 The excellent ["Motion Extraction" video by Posy](https://www.youtube.com/watch?v=NSS6yAMZF78) demonstrates how to extract motion from video.
 
 ## How does this work?

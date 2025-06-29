@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Voting in Netflix's The Circle</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="In January 2020 Netflix released the first season of "The Circle", a reality competition show in which players interact via the show's eponymous..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li><a href="/category/art.html">Art</a></li>
+                                                <li class="active"><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/voting-in-netflixs-the-circle.html" rel="bookmark"
+             title="Permalink to Voting in Netflix's The Circle">Voting in Netflix's The Circle</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/exploration.html">Exploration</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>In January 2020 Netflix released the first season of "The Circle", a reality competition show in which players interact via the show's eponymous social media platform and rate each other on the quality of those interactions. 
+I was curious how the ratings system might work so I wrote a Python script to emulate it. This could just as easily have been done in a spreadsheet.</p>
+<p>When a ratings session begins each player ranks the other players who are eligible to be rated from last place to first place. </p>
+<p>Not all players can be rated, but usually everyone can rate. This often happens when new players enter The Circle and it creates an opportunity for existing players to form alliances with noobies.</p>
+<p>Let's say there are six existing players, we'll call them <strong>Abe</strong>, <strong>Bruce</strong>, <strong>Carla</strong>, <strong>Dylan</strong>, <strong>Emily</strong>, and <strong>Francine</strong>. There are also two new players, <strong>Georgia</strong> and <strong>Henrietta</strong>. They can rate but can't be rated.</p>
+<p>In the script, <code>raters</code> defines the names of the people who can rate - usually everyone. 
+<code>ratees</code> defines everyone who can be rated. This is a subset of raters. In the script I just defined it as an array of indices of raters to keep things DRY. </p>
+<p>The ratings matrix is initialized as a <code>n_ratees</code> x <code>n_raters</code> matrix of zeros of type <code>int</code>. </p>
+<p>The script then gathers input from each rater. Who did <strong>Abe</strong> put in 4th place? Who did <strong>Carla</strong> put in 1st place? </p>
+<p>Once the ratings matrix is assembled, getting the final ratings is as simple as getting the sorted per-row sum of the ratings matrix. The lower you're rated the higher your sum will be and vice versa. </p>
+<p>|  | Abe | Bruce | Carla | Dylan | Emily | Francine|Georgia|Henrietta|<strong>SUM</strong>|
+| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
+|<strong>Abe</strong>|0|0|3|1|1|2|0|0|<strong>7</strong>|
+|<strong>Bruce</strong>|4|0|2|2|2|3|3|1|<strong>17</strong>|
+|<strong>Carla</strong>|3|2|0|0|4|1|2|2|<strong>14</strong>|
+|<strong>Dylan</strong>|2|1|0|0|3|0|1|3|<strong>10</strong>|
+|<strong>Emily</strong>|0|3|1|0|0|4|5|4|<strong>17</strong>|
+|<strong>Francine</strong>|1|4|4|4|0|0|4|5|<strong>22</strong>|</p>
+<p>From this we can see that <strong>Francine</strong> came in 6th place, <strong>Emily</strong> and <strong>Bruce</strong> tied for 4th, <strong>Carla</strong> is 3rd, <strong>Dylan</strong> in 2nd and <strong>Abe</strong> came in 1st. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">raters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Abe&quot;</span><span class="p">,</span><span class="s2">&quot;Bruce&quot;</span><span class="p">,</span><span class="s2">&quot;Carla&quot;</span><span class="p">,</span><span class="s2">&quot;Dylan&quot;</span><span class="p">,</span><span class="s2">&quot;Emily&quot;</span><span class="p">,</span><span class="s2">&quot;Francine&quot;</span><span class="p">,</span><span class="s2">&quot;Georgia&quot;</span><span class="p">,</span><span class="s2">&quot;Henrietta&quot;</span><span class="p">])</span> <span class="c1">#Names of everyone doing ratings</span>
+<span class="n">ratees</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span> <span class="c1">#Indices of names of people being rated</span>
+
+<span class="n">n_raters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raters</span><span class="p">)</span> <span class="c1">#Number of raters</span>
+<span class="n">n_ratees</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ratees</span><span class="p">)</span> <span class="c1">#Number of rateees</span>
+
+
+<span class="n">ratings_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_ratees</span><span class="p">,</span><span class="n">n_raters</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">rater</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_raters</span><span class="p">):</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">position</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n_ratees</span><span class="p">):</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">raters</span><span class="p">[</span><span class="n">rater</span><span class="p">]</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">Select someone for position </span><span class="si">{</span><span class="n">position</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ratees</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">r</span> <span class="o">==</span> <span class="n">rater</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">raters</span><span class="p">[</span><span class="n">ratees</span><span class="p">[</span><span class="n">r</span><span class="p">]]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> 
+                <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raters</span><span class="p">[</span><span class="n">ratees</span><span class="p">[</span><span class="n">r</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">ratee</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Type a number: &quot;</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">You put </span><span class="si">{</span><span class="n">raters</span><span class="p">[</span><span class="n">ratee</span><span class="p">]</span><span class="si">}</span><span class="s2"> in position </span><span class="si">{</span><span class="n">position</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">selection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratee</span><span class="p">)</span>
+
+        <span class="n">ratings_matrix</span><span class="p">[</span><span class="n">ratee</span><span class="p">,</span><span class="n">rater</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+
+
+<span class="n">ratings_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ratings_matrix</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">raters</span><span class="p">[</span><span class="n">ratees</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">ratings_sum</span><span class="p">)]]</span>
+
+<span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ratings</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Position </span><span class="si">{</span><span class="n">q</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ratings</span><span class="p">[</span><span class="n">q</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

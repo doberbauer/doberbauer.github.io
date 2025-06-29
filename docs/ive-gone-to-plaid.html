@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>I've Gone to Plaid</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="This is an exercise I did to keep myself busy while processing data. It's a procedural plaid pattern generator written in Python. It produces a..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li class="active"><a href="/category/art.html">Art</a></li>
+                                                <li><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/ive-gone-to-plaid.html" rel="bookmark"
+             title="Permalink to I've Gone to Plaid">I've Gone to Plaid</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/art.html">Art</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>This is an exercise I did to keep myself busy while processing data. </p>
+<p>It's a procedural plaid pattern generator written in Python. It produces a Gingham, Buffalo or plaid pattern with procedural colors and design elements.</p>
+<p><a href="https://github.com/hyperific/gone_to_plaid">Just show me the code</a></p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706130144-0.png"></p>
+<h1>Gingham and Buffalo</h1>
+<p>Buffalo plaid is characterized by a colored background (usually red) and black crisscrossing lines, forming solid squares where they intersect.
+<img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705965396-0.png"></p>
+<p>Gingham is similar except the background is always white and the lines are variable colors (usually red).
+<img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705965482-0.png"></p>
+<p>I'm not a strict disciple of the church of "Don't Repeat Yourself" so the functions for gingham and buffalo plaid look pretty much the same except for the color generation handling. </p>
+<p>I could have made buffalo and gingham using intersecting lines or rectangles but instead of opted to make the pattern out of squares.
+To make squares I used PIL ImageDraw's <code>rectangle()</code> function.
+It needs a tuple <code>shape</code>, and an RGB color tuple <code>fill</code>. Shape is (x1,y1,x2,y2), or top left x coordinate, top left y coordinate, bottom right x coordinate, bottom right y coordinate. </p>
+<p>First I get 20 linearly spaced values from 0 to the width of the image. These will act as the X and Y coordinates of each rectangle's top left corner.
+Since the spacing is variable I also grab the second value of the spacing array and save it so I can calculate the bottom right corner. 
+I loop through rows first, then columns, so the pattern is build from left to right and top to bottom. The shape becomes <code>(spacing[col],spacing[row],spacing[col]+dif,spacing[row]+dif)</code>
+For row 1 column 1 with a difference in spacing of 50 pixels the shape would be <code>(0,0,0+50,0+50)</code>.</p>
+<p>Now let's talk colors. Every time you call the gingham or buffalo function it generates the pattern with a unique randomly chosen color. I opted for HSL colors since they're intuitive and it's easy to convert them to RGB later.
+First, a base hue is chosen as a random angle between 0 and 359 degrees of the color wheel. From this base hue all the colors of the pattern will be derived. Buffalo colors differ only by luminance, gingham patterns differ only by saturation. As the loop proceeds through rows and columns colors are chosen based on whether the column and row numbers are even or odd.</p>
+<h1>Plaid</h1>
+<p>Plaid is where things go off-script. There are <em>loads</em> of different plaid variations.</p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705965550-1.jpg"></p>
+<p><img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1705965550-0.png"></p>
+<p>Unlike buffalo and gingham, here I <em>did</em> decide to use intersecting lines.
+I'll try my best to keep this from getting too convoluted but maybe grab another cup of coffee just in case.</p>
+<p>My plaid patterns are made up of three basic elements: 
+- Thick lines
+- Medium lines
+- Thin lines
+There are also two optional elements:
+- Boxes at intersections
+- Additional thin horizontal or vertical line</p>
+<p>The number, thickness, color and presence of some lines is randomized. </p>
+<p>As for colors, first the saturation for most of the colors is determined randomly.
+The background and box hues are determined separately as values between 0 and 359. Then there's a possibility of having other colors be analogous or complementary by making an array <code>degree_diff = [30,-30,180,-180]</code>, randomly indexing into it and hen subtracting that value from other hues.
+Once the HSV colors are determined they're converted to RGB. Thin lines have randomly determined luminance values, but their hue and saturation are static. </p>
+<p>There are some randomly determined offsets for lines and boxes and whatnot and those end up trickling down and influencing the positions of sub-elements.
+Once all the elements are drawn we end up with 1/4 of the final image. I figured why bother with the extra hassle when I could just flip and mirror the image? It's the same information just transformed a bit. </p>
+<p>At the end there's a coin flip to determine if thin diagonal lines with be drawn over the top of the image to create a fabric-like texture.</p>
+<h1>Code</h1>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">ImageOps</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">colorsys</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;plaid&#39;</span><span class="p">:</span>
+        <span class="n">_plaid</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;buffalo&#39;</span><span class="p">:</span>
+        <span class="n">_buffalo</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;gingham&#39;</span><span class="p">:</span>
+        <span class="n">_gingham</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_gingham</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">h</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># Gingham is defined by a white background and evenly spaced colored lines. </span>
+    <span class="c1"># Horizontal and vertical lines have different saturation values</span>
+    <span class="c1"># Where lines intersect the color is darker still</span>
+    <span class="c1"># In this implementation I&#39;ve chosen to use rectangles instead of lines.</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> <span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">dif</span> <span class="o">=</span> <span class="n">spacing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#This is the difference in spacing between each value of spacing</span>
+
+    <span class="c1"># The hue is generated randomly as a value between 0 and 359 (the color wheel being 360 degrees)</span>
+    <span class="c1"># This value is divided by 100 since colorsys represents hsv as percentages</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">359</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span> 
+
+
+    <span class="c1"># Colors for background, and the 3 different colored boxes are generated</span>
+    <span class="n">color1</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">color2</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">color3</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">color4</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mf">0.75</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Rows and columns are looped through. Colors are alternated based on whether the row</span>
+    <span class="c1"># index is even or odd.</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">row</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">color1</span><span class="p">,</span><span class="n">color2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">color3</span><span class="p">,</span><span class="n">color4</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)):</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="n">col</span><span class="p">],</span><span class="n">spacing</span><span class="p">[</span><span class="n">row</span><span class="p">],</span><span class="n">spacing</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">+</span><span class="n">dif</span><span class="p">,</span><span class="n">spacing</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">+</span><span class="n">dif</span><span class="p">)</span>
+            <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">col</span><span class="o">%</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="c1"># It&#39;s randomly decided whether to additionally draw diagonal lines across the whole image</span>
+    <span class="c1"># These diagonal lines are usually present in some fashion in plaid patterns</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">dlines</span> <span class="o">=</span> <span class="n">_diagonal_lines</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">dlines</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">dlines</span><span class="p">)</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">_save_pattern</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_buffalo</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">h</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># Buffalo plaid is similar to gingham. It&#39;s defined by a colored background and</span>
+    <span class="c1"># black/gray lines. Where the lines intersect they&#39;re usually darker.</span>
+    <span class="c1"># Like gingham, horizontal and vertical lines typically have different intensities.</span>
+    <span class="c1"># In this implementation I&#39;ve chosen to use rectangles instead of lines.</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> <span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">dif</span> <span class="o">=</span> <span class="n">spacing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#This is the difference in spacing between each value of spacing</span>
+
+    <span class="c1"># The hue is generated randomly as a value between 0 and 359 (the color wheel being 360 degrees)</span>
+    <span class="c1"># This value is divided by 100 since colorsys represents hsv as percentages</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">359</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span>
+
+    <span class="c1"># Colors for background, and the 3 different colored boxes are generated</span>
+    <span class="n">color1</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">color2</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">color3</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">color4</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Rows and columns are looped through. Colors are alternated based on whether the row</span>
+    <span class="c1"># index is even or odd.</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">row</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">color1</span><span class="p">,</span><span class="n">color2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">color3</span><span class="p">,</span><span class="n">color4</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)):</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="n">col</span><span class="p">],</span><span class="n">spacing</span><span class="p">[</span><span class="n">row</span><span class="p">],</span><span class="n">spacing</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">+</span><span class="n">dif</span><span class="p">,</span><span class="n">spacing</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">+</span><span class="n">dif</span><span class="p">)</span>
+            <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">col</span><span class="o">%</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="c1"># It&#39;s randomly decided whether to additionally draw diagonal lines across the whole image</span>
+    <span class="c1"># These diagonal lines are usually present in some fashion in plaid patterns   </span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">dlines</span> <span class="o">=</span> <span class="n">_diagonal_lines</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">color1</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">dlines</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">dlines</span><span class="p">)</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">_save_pattern</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_plaid</span><span class="p">():</span>
+    <span class="c1"># Plaid patterns are diverse. This implementation uses rules which generate only</span>
+    <span class="c1"># a subset of the plaid patterns that exist in the wild. </span>
+
+    <span class="c1"># Background and major element colors are generated randomly</span>
+    <span class="c1"># All other elements are procedurally generated to be harmoneous</span>
+    <span class="c1"># with major element colors. They can be complementary or analogous.</span>
+
+    <span class="c1"># Height and width here describe the initial tile dimensions</span>
+    <span class="c1"># This tile will be copied 3 times, resulting in an image whose</span>
+    <span class="c1"># dimensions are (w*4,h*4)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">250</span> 
+    <span class="n">h</span> <span class="o">=</span> <span class="mi">250</span>
+
+
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="c1"># Random saturation value between 0 and 1</span>
+
+    <span class="c1">#Background and box hues are randomly generated integers between 0 and 359 (colorwheel being 360 degrees)</span>
+    <span class="n">bkg_hue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">359</span><span class="p">)</span>
+    <span class="n">box_hue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">359</span><span class="p">)</span>
+
+    <span class="c1"># This is a list of possible colorwheel degree differences</span>
+    <span class="c1"># 30 and -30 are analogous colors</span>
+    <span class="c1"># 180 and -180 are complementary colors</span>
+    <span class="n">degree_diff</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="o">-</span><span class="mi">180</span><span class="p">]</span>
+
+    <span class="c1"># Thick line hues are defined by the box hue minus a randomly decided degree difference</span>
+    <span class="n">thick_hue</span> <span class="o">=</span> <span class="n">box_hue</span><span class="o">-</span><span class="n">degree_diff</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+
+    <span class="c1"># RGB colors are calculated from the above HSV.</span>
+    <span class="n">bkg_color</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">bkg_hue</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span><span class="n">sat</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">box_color</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">box_hue</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span><span class="n">sat</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">thick_color</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">thick_hue</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span><span class="n">sat</span><span class="p">,</span><span class="mf">0.60</span><span class="p">)</span>
+
+    <span class="c1"># Thin lines can be 95%, 60% and 0.5% bright</span>
+    <span class="c1"># Brightness is randomly picked from the list.</span>
+    <span class="n">thin_vals</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.60</span><span class="p">,</span><span class="mf">0.05</span><span class="p">]</span>
+    <span class="n">thin_color</span> <span class="o">=</span> <span class="n">_hsv2rgb</span><span class="p">(</span><span class="n">thick_hue</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="n">thin_vals</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span><span class="n">bkg_color</span><span class="p">)</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="n">line_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">line_offset</span> <span class="o">-=</span> <span class="n">line_offset</span> <span class="o">%</span> <span class="mi">5</span>
+
+    <span class="n">box_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">box_offset</span> <span class="o">%</span><span class="mi">2</span> <span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">box_offset</span> <span class="o">+=</span><span class="mi">1</span>
+
+    <span class="n">vline</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">vline</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="n">box_offset</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">hline</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">hline</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="n">box_offset</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">vline1</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_offset</span><span class="o">-</span><span class="n">box_offset</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">-</span><span class="n">box_offset</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">vline1</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">vline2</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">vline2</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">hline1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">-</span><span class="n">box_offset</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">line_offset</span><span class="o">-</span><span class="n">box_offset</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">hline1</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">hline2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">hline2</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">4</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Coinflip whether to draw boxes at line intersections</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_offset</span><span class="p">,</span><span class="n">line_offset</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">box</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">box_color</span><span class="p">)</span>
+
+    <span class="c1"># Coinflip whether to draw an additional line</span>
+    <span class="c1"># Coinflip whether the line is drawn horizontal or vertical</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">direction</span><span class="p">:</span>
+            <span class="n">extra_line</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">line_offset</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">extra_line</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_offset</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">box_offset</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">extra_line</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thick_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">4</span><span class="p">)))</span>
+
+    <span class="c1"># Additional thin horizontal and vertical lines are drawn</span>
+    <span class="c1"># The number of lines is randomly chosen between 3 and 5</span>
+    <span class="c1"># There&#39;s an additional coinflip to add additional spacing to the line offsets</span>
+    <span class="n">num_lines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_lines</span> <span class="o">%</span><span class="mi">2</span> <span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">num_lines</span> <span class="o">+=</span><span class="mi">1</span>  
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">box_offset</span><span class="o">+</span><span class="n">box_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">num_lines</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">line_offset</span> <span class="o">*=</span><span class="mi">4</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_lines</span><span class="p">):</span>
+        <span class="n">thin_vline</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_offset</span><span class="o">+</span><span class="n">spacing</span><span class="p">[</span><span class="n">l</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">spacing</span><span class="p">[</span><span class="n">l</span><span class="p">],</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">thin_vline</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thin_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">thin_hline</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">spacing</span><span class="p">[</span><span class="n">l</span><span class="p">],</span><span class="n">w</span><span class="p">,</span><span class="n">line_offset</span><span class="o">+</span><span class="n">spacing</span><span class="p">[</span><span class="n">l</span><span class="p">])</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">thin_hline</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">thin_color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+
+
+    <span class="n">flipped</span> <span class="o">=</span> <span class="n">ImageOps</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">img2</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">img2</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">flipped</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">))</span>
+
+    <span class="n">mirrored</span> <span class="o">=</span> <span class="n">ImageOps</span><span class="o">.</span><span class="n">mirror</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span>
+    <span class="n">img3</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,(</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">img3</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img2</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">img3</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">mirrored</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">tile</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,(</span><span class="n">w</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">tile</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img3</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">tile</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img3</span><span class="p">,(</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">tile</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img3</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">tile</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img3</span><span class="p">,(</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># Coinflip whether to additionally draw diagonal lines across the whole image</span>
+    <span class="c1"># These diagonal lines are usually present in some fashion in plaid patterns </span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">dlines</span> <span class="o">=</span> <span class="n">_diagonal_lines</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">bkg_color</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+        <span class="n">tile</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">dlines</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">dlines</span><span class="p">)</span>
+    <span class="n">tile</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">_save_pattern</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+
+
+
+<span class="k">def</span> <span class="nf">_hsv2rgb</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
+    <span class="c1"># Utility function that wraps colorsys.hsv_to_rgb</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">colorsys</span><span class="o">.</span><span class="n">hsv_to_rgb</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">_diagonal_lines</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)):</span>
+    <span class="c1"># Utility function to draw diagonal lines present in plaid patterns</span>
+    <span class="n">xspacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">yspacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">xspacing</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="o">-</span><span class="n">yspacing</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">yspacing</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">w</span><span class="o">-</span><span class="n">xspacing</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+<span class="k">def</span> <span class="nf">_save_pattern</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="c1"># Utility function to generate a random unique filename and save the image</span>
+
+    <span class="c1"># Generate a random UUID (Universally Unique Identifier)</span>
+    <span class="n">random_uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+
+    <span class="c1"># Create a random file name by converting the UUID to a string</span>
+    <span class="n">random_file_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">random_uuid</span><span class="p">)</span>
+
+    <span class="c1"># You can add a file extension if needed</span>
+    <span class="n">random_file_name_with_extension</span> <span class="o">=</span> <span class="n">random_file_name</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">random_file_name_with_extension</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;Gone to Plaid&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;A plaid pattern generator.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+    <span class="s1">&#39;--mode&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;-m&#39;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;buffalo&#39;</span><span class="p">,</span> <span class="s1">&#39;gingham&#39;</span><span class="p">,</span><span class="s1">&#39;plaid&#39;</span><span class="p">],</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern type to generate.&#39;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;plaid&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+</code></pre></div>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

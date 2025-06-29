@@ -1,3 +1,7 @@
+Title: Colorful Circles
+Date: 2024-01-01 12:00
+Category: Art
+
 January 1st marked the first day of [Genuary](https://genuary.art/)! 
 Genuary is an annual celebration of [generative art](https://en.wikipedia.org/wiki/Generative_art). If you're a regular reader of this blog you'll know that I love generative art. I'm not very good at it, but you can't get better at a thing unless you practice and that's what I want to get out of my art projects in the month of ~~January~~ Genuary. 
 

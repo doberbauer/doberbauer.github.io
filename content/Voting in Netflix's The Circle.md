@@ -1,3 +1,8 @@
+Title: Voting in Netflix's The Circle
+Date: 2024-01-01 12:00
+Category: Exploration
+
+
 In January 2020 Netflix released the first season of "The Circle", a reality competition show in which players interact via the show's eponymous social media platform and rate each other on the quality of those interactions. 
 I was curious how the ratings system might work so I wrote a Python script to emulate it. This could just as easily have been done in a spreadsheet.
 

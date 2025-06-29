@@ -1,4 +1,9 @@
-The [Brake Safe](https://hyperific.bearblog.dev/brakesafe/) project I left unfinished last year is kind of my white whale. I think of it all the time. "If I'd just had this sensor" or "if I'd just used that algorithm". I'll be driving down the road and think to myself, "If I only finished that project I'd know if I was within safe braking distance of that car."
+Title: Speed Estimation with FAST and Optical Flow
+Date: 2024-01-01 12:00
+Category: Project
+
+
+The [Brake Safe](https://doberbauer.github.io/brake-safe) project I left unfinished last year is kind of my white whale. I think of it all the time. "If I'd just had this sensor" or "if I'd just used that algorithm". I'll be driving down the road and think to myself, "If I only finished that project I'd know if I was within safe braking distance of that car."
 
 This post won't be my absolution. Not even close. But it's a step in the right direction. In this post I'm going to be reinventing the wheel in another way (because the safe braking distance problem has certainly been solved by the creators of self driving cars...). 
 

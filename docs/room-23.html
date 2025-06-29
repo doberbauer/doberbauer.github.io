@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Room 23</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+    <meta name="description" content="In season 3 Episode 7 of Lost, "Not in Portland", there's a scene in which young Karl is being subjected to a brainwashing video. Bizarre images..." />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">Daniel Oberbauer</a></h1>
+                        <nav><ul>
+                                                <li><a href="/category/art.html">Art</a></li>
+                                                <li class="active"><a href="/category/exploration.html">Exploration</a></li>
+                                                <li><a href="/category/project.html">Project</a></li>
+                                                <li><a href="/category/resources.html">Resources</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="/room-23.html" rel="bookmark"
+             title="Permalink to Room 23">Room 23</a></h1>
+      </header>
+
+      <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2024-01-01T12:00:00-08:00">
+                Published: Mon 01 January 2024
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
+                </address>
+        <p>In <a href="/category/exploration.html">Exploration</a>.</p>
+        
+</footer><!-- /.post-info -->        <p>In season 3 Episode 7 of Lost, "Not in Portland", there's a scene in which young Karl is being subjected to a <a href="https://youtu.be/W-bVFovGMIU?t=138">brainwashing video</a>. Bizarre images flash before his eyes while loud drum and bass music pounds away over loud speakers. <a href="https://youtu.be/yp024U-sH1A">Here's</a> the video he was watching in case your brain needs washing.
+We see <a href="https://youtu.be/I4xis2xWI5U&amp;t=4m8s">something similar</a> on an episode of House MD in season 6 entitled "Black Hole". In this case it's not torture but part of a "cognitive pattern recognition" test to map the young woman's brain so they can see what she's thinking. </p>
+<p>I thought it'd be cool to make something like this, but I honestly didn't want to invest a lot of time for a flight of fancy. As such I turned to ChatGPT to do the heavy lifting. A few clarifying prompts later and after some slight edits on my end I got this</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">moviepy.editor</span> <span class="k">as</span> <span class="nn">mp</span>
+
+<span class="k">def</span> <span class="nf">extract_clips</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">num_clips</span><span class="p">,</span> <span class="n">clip_duration</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">):</span>
+    <span class="c1"># Load the input video</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">VideoFileClip</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the total duration of the input video in seconds</span>
+    <span class="n">total_duration</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">duration</span>
+
+    <span class="c1"># Calculate the interval between each clip in seconds</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">total_duration</span> <span class="o">/</span> <span class="n">num_clips</span>
+
+    <span class="c1"># Create a list to store the extracted video and audio clips</span>
+    <span class="n">video_clips</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">audio_clips</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Extract the desired number of clips</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_clips</span><span class="p">):</span>
+        <span class="c1"># Calculate the start and end times for the current clip</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">interval</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">clip_duration</span>
+
+        <span class="c1"># Extract the video clip from the input video</span>
+        <span class="n">video_clip</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">subclip</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">)</span>
+
+        <span class="c1"># Extract the audio clip from the input video</span>
+        <span class="n">audio_clip</span> <span class="o">=</span> <span class="n">video_clip</span><span class="o">.</span><span class="n">audio</span>
+
+        <span class="c1"># Add the video and audio clips to the lists</span>
+        <span class="n">video_clips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">video_clip</span><span class="p">)</span>
+        <span class="n">audio_clips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">audio_clip</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate the video clips into a single output video</span>
+    <span class="n">final_video</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">concatenate_videoclips</span><span class="p">(</span><span class="n">video_clips</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate the audio clips into a single output audio</span>
+    <span class="n">final_audio</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">concatenate_audioclips</span><span class="p">(</span><span class="n">audio_clips</span><span class="p">)</span>
+
+    <span class="c1"># Set the audio of the final video to the concatenated audio</span>
+    <span class="n">final_video</span> <span class="o">=</span> <span class="n">final_video</span><span class="o">.</span><span class="n">set_audio</span><span class="p">(</span><span class="n">final_audio</span><span class="p">)</span>
+
+    <span class="c1"># Write the final output video to a file</span>
+    <span class="n">final_video</span><span class="o">.</span><span class="n">write_videofile</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+</code></pre></div>
+
+<p>I snagged a video from <a href="https://archive.org/details/vhsvault">VHS Vault</a> and gave it a try. <a href="https://youtu.be/5ohxA7YwRAU">Here's the result</a>. All I need to do now is add some throbbing DnB over top of it. Maybe <a href="https://youtu.be/e59Mo7AhMhg?t=37">Cartridge - End of the World</a> or <a href="https://youtu.be/bwhxKYVDTBU?t=67">Limewax - Everything</a>.</p>
+<p>I'm just posting this as a thought experiment and for entertainment purposes. Please don't use this for sketchy unethical reasons including but not limited to torture or brainwashing.</p>
+      </div><!-- /.entry-content -->
+
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>
