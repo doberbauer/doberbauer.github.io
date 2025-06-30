@@ -1,44 +1,68 @@
 <!DOCTYPE html>
-<html lang="english">
-        <head>
-                        <meta charset="utf-8" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <meta name="generator" content="Pelican" />
-                        <title>Wrecktangles</title>
-                        <link rel="stylesheet" href="/theme/css/main.css" />
-    <meta name="description" content="I wrote a quick Python script that recreates an image using thousands of randomly placed squares. The square color is determined by taking the..." />
-        </head>
+<html lang="en">
 
-        <body id="index" class="home">
-                <header id="banner" class="body">
-                        <h1><a href="/">Daniel Oberbauer</a></h1>
-                        <nav><ul>
-                                                <li class="active"><a href="/category/art.html">Art</a></li>
-                                                <li><a href="/category/exploration.html">Exploration</a></li>
-                                                <li><a href="/category/project.html">Project</a></li>
-                                                <li><a href="/category/resources.html">Resources</a></li>
-                        </ul></nav>
-                </header><!-- /#banner -->
-  <section id="content" class="body">
-    <article>
-      <header>
-        <h1 class="entry-title">
-          <a href="/wrecktangles.html" rel="bookmark"
-             title="Permalink to Wrecktangles">Wrecktangles</a></h1>
-      </header>
+<head>
+  <!-- ## for client-side less
+  <link rel="stylesheet/less" type="text/css" href="/theme/css/style.less">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.3/less.min.js" type="text/javascript"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
 
-      <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2024-01-01T12:00:00-08:00">
-                Published: Mon 01 January 2024
-        </abbr>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Daniel Oberbauer">
+  <meta name="description" content="Posts and writings by Daniel Oberbauer">
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
-                </address>
-        <p>In <a href="/category/art.html">Art</a>.</p>
-        
-</footer><!-- /.post-info -->        <p>I wrote a quick Python script that recreates an image using thousands of randomly placed squares. The square color is determined by taking the mean color value of the original image that's covered by the square. Square size is randomly determined between a max and a min. To ensure there aren't any gaps between boxes the number of boxes is determined mathematically as the midpoint between the number of boxes needed if all of them were the max size and if all of them are the min size. </p>
+
+<meta name="keywords" content="">
+
+  <title>
+    Daniel Oberbauer
+&ndash; Wrecktangles  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h2><a href="">Daniel Oberbauer</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="/category/art.html">Art</a></li>
+        <li><a href="/category/exploration.html">Exploration</a></li>
+        <li><a href="/category/project.html">Project</a></li>
+        <li><a href="/category/resources.html">Resources</a></li>
+        <li><a href="https://getpelican.com/" target="_blank">Pelican</a></li>
+        <li><a href="https://www.python.org/" target="_blank">Python.org</a></li>
+        <li><a href="https://palletsprojects.com/p/jinja/" target="_blank">Jinja2</a></li>
+        <li><a href="#" target="_blank">You can modify those links in your config file</a></li>
+        <li><a href="#" target="_blank">You can add links in your config file</a></li>
+        <li><a href="#" target="_blank">Another social link</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h1><a href="/wrecktangles.html">Wrecktangles</a></h1>
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Mon 01 January 2024</p>
+  </div>
+  <div class="article_text">
+    <p>I wrote a quick Python script that recreates an image using thousands of randomly placed squares. The square color is determined by taking the mean color value of the original image that's covered by the square. Square size is randomly determined between a max and a min. To ensure there aren't any gaps between boxes the number of boxes is determined mathematically as the midpoint between the number of boxes needed if all of them were the max size and if all of them are the min size. </p>
 <p>Unsurprisingly, wrecktangles acts as a form of <em>incredibly</em> lossy compression. Increasing the min and max box sizes increases the compression ratio.</p>
 <p>Original (6.75 MB)
 <img alt="Hyperific's blog" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/hyperific-1706045452-0.jpg">
@@ -85,37 +109,19 @@ Wrecktangle min 10, max 75 (1.47 MB)
        <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(((</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)),</span> <span class="n">fill</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
     <span class="n">out</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;out.png&quot;</span><span class="p">)</span>
 </code></pre></div>
-      </div><!-- /.entry-content -->
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="/category/art.html">Art</a>
+    </p>
+  </div>
 
-    </article>
-  </section>
-                <section id="extras" class="body">
-                                <div class="blogroll">
-                                        <h2>links</h2>
-                                        <ul>
-                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
-                                                        <li><a href="https://www.python.org/">Python.org</a></li>
-                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
-                                                        <li><a href="#">You can modify those links in your config file</a></li>
-                                        </ul>
-                                </div><!-- /.blogroll -->
-                                <div class="social">
-                                        <h2>social</h2>
-                                        <ul>
 
-                                                        <li><a href="#">You can add links in your config file</a></li>
-                                                        <li><a href="#">Another social link</a></li>
-                                        </ul>
-                                </div><!-- /.social -->
-                </section><!-- /#extras -->
+</article>
 
-                <footer id="contentinfo" class="body">
-                        <address id="about" class="vcard body">
-                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
-                        </address><!-- /#about -->
 
-                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-                </footer><!-- /#contentinfo -->
-
-        </body>
+    <div id="ending_message">
+      <p>&copy; Daniel Oberbauer. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/gfidente/pelican-svbhack" target="_blank">github</a>. </p>
+    </div>
+  </main>
+</body>
 </html>

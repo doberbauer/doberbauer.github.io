@@ -1,44 +1,68 @@
 <!DOCTYPE html>
-<html lang="english">
-        <head>
-                        <meta charset="utf-8" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <meta name="generator" content="Pelican" />
-                        <title>Mean Shift Rotoscoping Part 2</title>
-                        <link rel="stylesheet" href="/theme/css/main.css" />
-    <meta name="description" content="In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I..." />
-        </head>
+<html lang="en">
 
-        <body id="index" class="home">
-                <header id="banner" class="body">
-                        <h1><a href="/">Daniel Oberbauer</a></h1>
-                        <nav><ul>
-                                                <li class="active"><a href="/category/art.html">Art</a></li>
-                                                <li><a href="/category/exploration.html">Exploration</a></li>
-                                                <li><a href="/category/project.html">Project</a></li>
-                                                <li><a href="/category/resources.html">Resources</a></li>
-                        </ul></nav>
-                </header><!-- /#banner -->
-  <section id="content" class="body">
-    <article>
-      <header>
-        <h1 class="entry-title">
-          <a href="/mean-shift-rotoscoping-part-2.html" rel="bookmark"
-             title="Permalink to Mean Shift Rotoscoping Part 2">Mean Shift Rotoscoping Part 2</a></h1>
-      </header>
+<head>
+  <!-- ## for client-side less
+  <link rel="stylesheet/less" type="text/css" href="/theme/css/style.less">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.3/less.min.js" type="text/javascript"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
 
-      <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2024-01-01T12:00:00-08:00">
-                Published: Mon 01 January 2024
-        </abbr>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Daniel Oberbauer">
+  <meta name="description" content="Posts and writings by Daniel Oberbauer">
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="/author/daniel-oberbauer.html">Daniel Oberbauer</a>
-                </address>
-        <p>In <a href="/category/art.html">Art</a>.</p>
-        
-</footer><!-- /.post-info -->        <p>In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I guessed that Amazon's <em>Undone</em> used this technique as part of their rotoscoping pipeline. I have since found <em>numerous</em> <a href="https://www.indiewire.com/awards/industry/undone-amazon-prime-video-rotoscope-1202238213/">articles</a> and <a href="https://www.youtube.com/watch?v=J9sYE9tIwTE">interviews</a> explaining how the creative teams behind the show achieved its signature visual style. Mean shift filtering wasn't mentioned. </p>
+
+<meta name="keywords" content="">
+
+  <title>
+    Daniel Oberbauer
+&ndash; Mean Shift Rotoscoping Part 2  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h2><a href="">Daniel Oberbauer</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="/category/art.html">Art</a></li>
+        <li><a href="/category/exploration.html">Exploration</a></li>
+        <li><a href="/category/project.html">Project</a></li>
+        <li><a href="/category/resources.html">Resources</a></li>
+        <li><a href="https://getpelican.com/" target="_blank">Pelican</a></li>
+        <li><a href="https://www.python.org/" target="_blank">Python.org</a></li>
+        <li><a href="https://palletsprojects.com/p/jinja/" target="_blank">Jinja2</a></li>
+        <li><a href="#" target="_blank">You can modify those links in your config file</a></li>
+        <li><a href="#" target="_blank">You can add links in your config file</a></li>
+        <li><a href="#" target="_blank">Another social link</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h1><a href="/mean-shift-rotoscoping-part-2.html">Mean Shift Rotoscoping Part 2</a></h1>
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Mon 01 January 2024</p>
+  </div>
+  <div class="article_text">
+    <p>In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I guessed that Amazon's <em>Undone</em> used this technique as part of their rotoscoping pipeline. I have since found <em>numerous</em> <a href="https://www.indiewire.com/awards/industry/undone-amazon-prime-video-rotoscope-1202238213/">articles</a> and <a href="https://www.youtube.com/watch?v=J9sYE9tIwTE">interviews</a> explaining how the creative teams behind the show achieved its signature visual style. Mean shift filtering wasn't mentioned. </p>
 <p>That being said, I think it's an interesting approach and I wanted to improve upon it. Mean Shift does a great job of smoothing out fine detail while preserving coarse detail, but I wanted to add some details back in to really lock in that rotoscoped style. The artists behind <em>Undone</em> clearly put a lot of emphasis on character's <a href="https://deadline.com/wp-content/uploads/2019/06/screen-shot-2019-06-07-at-10.28.54-am.png?w=1024">facial expressions</a>, using thick dark lines to define facial features much in the way <a href="https://d1466nnw0ex81e.cloudfront.net/n_iv/600/651895.jpg">comic artists do</a>. I figured I could achieve something similar with a little computer vision. For examples to follow I used <a href="https://www.pexels.com/video/a-woman-standing-by-the-riverside-smiling-for-the-camera-3253738/">this</a> video from Pexels.</p>
 <h2>Face Recognition</h2>
 <p>I was searching GitHub for a good Eulerian video magnification Python implementation (for an upcoming project / blog post) and I stumbled upon <a href="https://github.com/ageitgey/face_recognition/tree/master">Face Recognition</a>, a lovely Python package for detecting and manipulating faces in video and images. The <code>face_landmarks</code> method caught my eye as it could recognize facial landmarks like eyes, nose, chin, mouth, eye brows, etc. It looked pretty dang cool so thought I'd gave it a whirl. Face Recognition requires Mac or Linux and unfortunately I had neither, nor did I have the patience to follow Face Recognition's  unofficial Windows installation guide. Instead I opted to set it up in a Google Colab notebook. I threw my existing mean shift script in, sprinkled in the code to detect and draw facial landmarks and let 'er rip. 90 minutes of free Google GPU compute time later and the results were... unimpressive. Don't get me wrong, Face Recognition was great: it was able to identify face landmarks and I could render them out to a mean shift rotoscoped frame. What didn't impressive me was how the landmark lines didn't flow very well. They looked blocky and obviously artificial. Each facial feature was essentially a list of points and the method I was using to draw them simply connected the dots iteratively. This was not ideal. If I wanted to even come close to the visual style of <em>Undone</em> I'd need to do better.</p>
@@ -62,37 +86,19 @@ I looked like OpenCV's <a href="https://docs.opencv.org/3.4/da/d22/tutorial_py_c
 They were also quite thin and sometimes difficult to see, so I used OpenCV's <a href="https://docs.opencv.org/3.4/db/df6/tutorial_erosion_dilatation.html"><code>dilate</code></a> function to thicken them up a bit. <code>dilate</code> works on white pixels so this had to happen before inverting. The results, in my opinion, looked a <strong>hell</strong> of a lot better than anything that came out of Face Recognition and certainly better than mean shift alone. <a href="https://youtu.be/QIekVx3svRw">See for yourself</a>.
 I exposed the Canny Edge Detection thresholds and dilation kernel size to give more control over which edges are detected and how much they're thickened. </p>
 <p>You can play with it <a href="https://colab.research.google.com/drive/1sKbdY6mbhxxu_fx7QwwQhg1e6TuRsTdD?usp=sharing">here</a>. </p>
-      </div><!-- /.entry-content -->
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="/category/art.html">Art</a>
+    </p>
+  </div>
 
-    </article>
-  </section>
-                <section id="extras" class="body">
-                                <div class="blogroll">
-                                        <h2>links</h2>
-                                        <ul>
-                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
-                                                        <li><a href="https://www.python.org/">Python.org</a></li>
-                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
-                                                        <li><a href="#">You can modify those links in your config file</a></li>
-                                        </ul>
-                                </div><!-- /.blogroll -->
-                                <div class="social">
-                                        <h2>social</h2>
-                                        <ul>
 
-                                                        <li><a href="#">You can add links in your config file</a></li>
-                                                        <li><a href="#">Another social link</a></li>
-                                        </ul>
-                                </div><!-- /.social -->
-                </section><!-- /#extras -->
+</article>
 
-                <footer id="contentinfo" class="body">
-                        <address id="about" class="vcard body">
-                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
-                        </address><!-- /#about -->
 
-                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-                </footer><!-- /#contentinfo -->
-
-        </body>
+    <div id="ending_message">
+      <p>&copy; Daniel Oberbauer. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/gfidente/pelican-svbhack" target="_blank">github</a>. </p>
+    </div>
+  </main>
+</body>
 </html>

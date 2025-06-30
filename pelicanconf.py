@@ -1,6 +1,9 @@
+
 AUTHOR = 'Daniel Oberbauer'
 SITENAME = 'Daniel Oberbauer'
 SITEURL = ""
+
+THEME = "../pelican-svbhack"
 
 PATH = "content"
 
@@ -31,7 +34,7 @@ SOCIAL = (
     ("Another social link", "#"),
 )
 
-DEFAULT_PAGINATION = True
+DEFAULT_PAGINATION = False
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
