@@ -1,5 +1,5 @@
 Title: Hyper Collage
-Date: 2024-01-01 12:00
+Date: 2023-06-16 16:12:03
 Category: Art
 
 The NFT boom of 2021 opened my eyes to a whole world of generative art. While some projects were more about the memes than the art, some really neat things were being done with p5js, Processing, even Turtles. 

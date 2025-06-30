@@ -1,5 +1,5 @@
 Title: Colorful Circles
-Date: 2024-01-01 12:00
+Date: 2024-01-01 00:00:00
 Category: Art
 
 January 1st marked the first day of [Genuary](https://genuary.art/)! 

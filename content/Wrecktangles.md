@@ -1,5 +1,5 @@
 Title: Wrecktangles
-Date: 2024-01-01 12:00
+Date: 2024-01-23 21:31
 Category: Art
 
 I wrote a quick Python script that recreates an image using thousands of randomly placed squares. The square color is determined by taking the mean color value of the original image that's covered by the square. Square size is randomly determined between a max and a min. To ensure there aren't any gaps between boxes the number of boxes is determined mathematically as the midpoint between the number of boxes needed if all of them were the max size and if all of them are the min size. 

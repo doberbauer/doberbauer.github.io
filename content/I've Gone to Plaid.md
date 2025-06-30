@@ -1,5 +1,5 @@
 Title: I've Gone to Plaid
-Date: 2024-01-01 12:00
+Date: 2023-09-20 09:36:20
 Category: Art
 
 This is an exercise I did to keep myself busy while processing data. 

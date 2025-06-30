@@ -1,5 +1,5 @@
 Title: Car Shopping Resources
-Date: 2024-01-01 12:00
+Date: 2023-07-07 00:28:00
 Category: Resources
 
 When I bought my first car I'll admit... I did the bare minimum of research. I was young and impulsive and when a friend of a friend announced they were selling a car I jumped on it. It was a 2001 VW Jetta GL and it was horrible. In the space of 2 years it needed a new engine, battery, and radiator and eventually a deeper cooling system issue put it out of its misery.

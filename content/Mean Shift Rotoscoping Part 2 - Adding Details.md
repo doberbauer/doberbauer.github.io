@@ -1,5 +1,5 @@
 Title: Mean Shift Rotoscoping Part 2
-Date: 2024-01-01 12:00
+Date: 2023-08-07 00:00:00
 Category: Art
 
 In Part 1 of Mean Shift Rotoscoping I showed how OpenCV's Mean Shift Filter can be used to produce a rotoscoping effect. At the end of that post I guessed that Amazon's *Undone* used this technique as part of their rotoscoping pipeline. I have since found *numerous* [articles](https://www.indiewire.com/awards/industry/undone-amazon-prime-video-rotoscope-1202238213/) and [interviews](https://www.youtube.com/watch?v=J9sYE9tIwTE) explaining how the creative teams behind the show achieved its signature visual style. Mean shift filtering wasn't mentioned. 

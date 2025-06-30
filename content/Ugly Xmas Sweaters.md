@@ -1,5 +1,5 @@
 Title: Ugly Xmas Sweaters
-Date: 2024-01-01 12:00
+Date: 2024-01-23 00:00:00+00:00
 Category: Art
 
 I, like many others, was swept up in the NFT craze of 2021. I'd seen some collections of simple pixel art NFTs where they'd randomize a character's facial expressions, clothes, hats, appendages, etc. I spent a good chunk of time (far too much) thinking about what I could make that was interesting and permutable. It was late October or early November, Christmas was right around the corner and the idea finally came: Ugly Xmas Sweaters. 
