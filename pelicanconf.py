@@ -2,7 +2,7 @@
 AUTHOR = 'Daniel Oberbauer'
 SITENAME = 'Daniel Oberbauer'
 
-THEME = "../pelican-svbhack"
+THEME = "pelican-svbhack"
 
 PATH = "content"
 
