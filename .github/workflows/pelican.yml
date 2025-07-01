@@ -13,3 +13,4 @@ jobs:
     with:
       settings: "publishconf.py"
       theme: "https://github.com/gfidente/pelican-svbhack.git"
+      output-path: "docs/"
