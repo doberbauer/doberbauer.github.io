@@ -1,13 +1,10 @@
 
 AUTHOR = 'Daniel Oberbauer'
 SITENAME = 'Daniel Oberbauer'
-SITEURL = ""
 
 THEME = "../pelican-svbhack"
 
 PATH = "content"
-
-OUTPUT_PATH = "docs"
 
 TIMEZONE = 'America/Los_Angeles'
 
