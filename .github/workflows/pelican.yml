@@ -12,5 +12,6 @@ jobs:
       id-token: "write"
     with:
       settings: "publishconf.py"
+      requirements: "pelican[markdown] typogrify"
       theme: "https://github.com/gfidente/pelican-svbhack.git"
       output-path: "docs/"
