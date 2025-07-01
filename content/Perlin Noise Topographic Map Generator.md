@@ -2,7 +2,6 @@ Title: Perlin Noise Topographic Map Generator
 Date: 2023-09-14 21:22:29
 Category: Art
 
-
 I've always loved [topographic maps](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F13%2F8c%2F83%2F138c83d3c62e3c3b5cdc413704bc6ce5.jpg&f=1&nofb=1&ipt=8fa67a08008a5a888c1789d03ab113c00c8bb66c3cf9eb6f49bc47aa65127e6d&ipo=images). They're so useful but so rarely used in everyday life. I recently had some time on my hands and decided to whip up some code to generate some procedural topographic maps. 
 
 

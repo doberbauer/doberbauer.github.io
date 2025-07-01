@@ -2,8 +2,6 @@ Title: Multi Image Steganography
 Date: 2023-06-22 20:24:32
 Category: Exploration
 
-
-
 I have been wanting to do a steganography project of my own since I picked up my first programming language a few years ago.
 
 Where most steganography projects I've come across aim to secretly embed the entire message in a single image, I wanted to create a method that would encode a message across multiple images. You would need to have the entire collection of images to assemble the complete message.

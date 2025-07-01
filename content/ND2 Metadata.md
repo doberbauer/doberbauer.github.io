@@ -2,11 +2,6 @@ Title: ND2 Metadata
 Date: 2023-09-15 18:25:00
 Category: Exploration
 
-
-
-# ND2 Metadata
-
-
 This morning I was faced with the task of opening 114 microscope image files, opening up the image properties and jotting down the image width and height. 
 To make matters worse, the program to open those files can only be used if you are
 

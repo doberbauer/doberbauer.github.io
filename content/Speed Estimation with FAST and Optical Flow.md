@@ -1,6 +1,6 @@
 Title: Speed Estimation with FAST and Optical Flow
 Date: 2024-01-24 09:53:10
-Category: Project
+Category: Exploration
 
 
 The [Brake Safe](https://doberbauer.github.io/brake-safe) project I left unfinished last year is kind of my white whale. I think of it all the time. "If I'd just had this sensor" or "if I'd just used that algorithm". I'll be driving down the road and think to myself, "If I only finished that project I'd know if I was within safe braking distance of that car."

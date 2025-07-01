@@ -1,6 +1,6 @@
 Title: Toy Camera
 Date: 2023-06-24 00:00:00
-Category: Project
+Category: Exploration
 
 
 ### What is Toy Camera?

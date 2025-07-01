@@ -1,6 +1,6 @@
 Title: Brake Safe
 Date: 2023-06-26 00:00:00+00:00
-Category: Project
+Category: Exploration
 
 In this post I want to talk about a project I started but couldn't finish. I figure if I write about it I can get some insights into why it failed and prevent myself from making the same mistakes or, better yet, fail more effectively. 
  
