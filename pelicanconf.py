@@ -10,7 +10,8 @@ TIMEZONE = 'America/Los_Angeles'
 DEFAULT_LANG = 'en'
 STATIC_PATHS = ['images']
 
-USER_LOGO_URL = 'content/images/do.jpg'
+USER_LOGO_URL = 'images/do.jpg'
+ROUND_USER_LOGO = True
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
