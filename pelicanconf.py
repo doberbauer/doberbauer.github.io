@@ -2,7 +2,6 @@
 AUTHOR = 'Daniel Oberbauer'
 SITENAME = 'Daniel Oberbauer'
 
-THEME = "https://github.com/gfidente/pelican-svbhack.git"
 
 PATH = "content"
 
