@@ -2,7 +2,7 @@ Title:
 Date: {{date}} {{time}}
 Category: 
 Tags:
-Status:
+Status: skip
 
 *Short introduction*
 

@@ -1,7 +1,7 @@
 Title: Resources - How I Organize My Resources
-Date: 2025-07-02 09:05:90
+Date: 2025-07-02 09:05
 Category: Resources
-Tags: Resources, Musings
+Tags: resources, musings
 
 *How I organize the cool stuff I find on the internet*
 
