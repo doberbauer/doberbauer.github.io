@@ -14,3 +14,4 @@ jobs:
       settings: "publishconf.py"
       requirements: "pelican[markdown] typogrify"
       theme: "https://github.com/gfidente/pelican-svbhack.git"
+      plugins: "https://github.com/pelican-plugins/nojekyll.git"
