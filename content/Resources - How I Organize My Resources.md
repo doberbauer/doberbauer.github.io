@@ -1,6 +1,7 @@
 Title: Resources - How I Organize My Resources
 Date: 2025-07-02 09:05:90
-Category: Resources, Musings
+Category: Resources
+Tags: Resources, Musings
 
 *How I organize the cool stuff I find on the internet*
 
@@ -9,7 +10,7 @@ For as long as I've been using the internet, when I've come upon an interesting 
 When I find a cool thing I bookmark it and file that bookmark into a folder marked "Queue" on my bookmarks toolbar. When I get enough bookmarks I open up my "Resources" Obsidian Vault (notebook in Obsidian parlance) and create a new note for each bookmark. 
 
 # Templates
-One powerful feature of Obsidian is Templates. Suppose you're journaling in Obsidian and you want your journal entries to always have the same sections. You could create a Journal Entry template and whenever you want to make an entry you'd simple summon the template and now you have all your sections at the click of a button. When I create a Resource entry I create a new note and use my Resource Template to copy over all the sections that I want. 
+One powerful feature of [Obsidian](https://obsidian.md/) is Templates. Suppose you're journaling in Obsidian and you want your journal entries to always have the same sections. You could create a Journal Entry template and whenever you want to make an entry you'd simple summon the template and now you have all your sections at the click of a button. When I create a Resource entry I create a new note and use my Resource Template to copy over all the sections that I want. 
 
 The next few sections describe what's in this template.
 
