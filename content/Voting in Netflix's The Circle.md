@@ -1,5 +1,5 @@
 Title: Voting in Netflix's The Circle
-Date: 2024-05-06 00:00:00+00:00
+Date: 2024-05-06 00:00:00
 Category: Exploration
 
 
