@@ -8,7 +8,7 @@ sys.path.append(os.curdir)
 print(os.curdir)
 
 
-with open(os.path.join(os.curdir,".nojekyll","W")) as f:
+with open(os.path.join(os.curdir,".nojekyll"),"w") as f:
    f.write("")
 
 
