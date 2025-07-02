@@ -12,6 +12,5 @@ jobs:
       id-token: "write"
     with:
       settings: "publishconf.py"
-      requirements: "pelican[markdown] typogrify"
+      requirements: "pelican[markdown] typogrify michin.pelican.plugins.nojekyll"
       theme: "https://github.com/gfidente/pelican-svbhack.git"
-      plugins: "https://github.com/pelican-plugins/nojekyll.git"
