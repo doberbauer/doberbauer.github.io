@@ -5,6 +5,13 @@ import os
 import sys
 
 sys.path.append(os.curdir)
+print(os.curdir)
+
+
+with open(os.path.join(os.curdir,".nojekyll","W")) as f:
+   f.write("")
+
+
 from pelicanconf import *
 
 # If your site is available via HTTPS, make sure SITEURL begins with https://
