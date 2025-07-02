@@ -21,14 +21,14 @@ The script then gathers input from each rater. Who did **Abe** put in 4th place?
 
 Once the ratings matrix is assembled, getting the final ratings is as simple as getting the sorted per-row sum of the ratings matrix. The lower you're rated the higher your sum will be and vice versa. 
 
-|  | Abe | Bruce | Carla | Dylan | Emily | Francine|Georgia|Henrietta|**SUM**|
-| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
-|**Abe**|0|0|3|1|1|2|0|0|**7**|
-|**Bruce**|4|0|2|2|2|3|3|1|**17**|
-|**Carla**|3|2|0|0|4|1|2|2|**14**|
-|**Dylan**|2|1|0|0|3|0|1|3|**10**|
-|**Emily**|0|3|1|0|0|4|5|4|**17**|
-|**Francine**|1|4|4|4|0|0|4|5|**22**|
+|              | Abe | Bruce | Carla | Dylan | Emily | Francine | Georgia | Henrietta | **SUM** |
+| ------------ | --- | ----- | ----- | ----- | ----- | -------- | ------- | --------- | ------- |
+| **Abe**      | 0   | 0     | 3     | 1     | 1     | 2        | 0       | 0         | **7**   |
+| **Bruce**    | 4   | 0     | 2     | 2     | 2     | 3        | 3       | 1         | **17**  |
+| **Carla**    | 3   | 2     | 0     | 0     | 4     | 1        | 2       | 2         | **14**  |
+| **Dylan**    | 2   | 1     | 0     | 0     | 3     | 0        | 1       | 3         | **10**  |
+| **Emily**    | 0   | 3     | 1     | 0     | 0     | 4        | 5       | 4         | **17**  |
+| **Francine** | 1   | 4     | 4     | 4     | 0     | 0        | 4       | 5         | **22**  |
 
 From this we can see that **Francine** came in 6th place, **Emily** and **Bruce** tied for 4th, **Carla** is 3rd, **Dylan** in 2nd and **Abe** came in 1st. 
 
