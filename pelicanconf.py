@@ -23,5 +23,8 @@ AUTHOR_FEED_RSS = None
 
 DEFAULT_PAGINATION = False
 
+with open('.nojekyll','w') as f:
+   f.write('')
+
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
