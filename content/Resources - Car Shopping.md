@@ -1,4 +1,4 @@
-Title: Car Shopping Resources
+Title: Resources - Car Shopping 
 Date: 2023-07-07 00:28:00
 Category: Resources
 
