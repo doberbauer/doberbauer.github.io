@@ -18,4 +18,4 @@ I liked the theme used by [Mark Litwintschik's blog](https://tech.marksblogg.com
 
 When I want to post something I go to Obsidian, open a new note, pop in the frontmatter from a template, type up my thoughts, commit and push.
 
-My only problem so far is that whenever I push a commit, GitHub runs a [Jekyll](https://jekyllrb.com/) build action which inevitably fails. The workaround for this is allegedly to add a `.nojekyll` file to the repo root but so far that has been ineffective. 
+~~My only problem so far is that whenever I push a commit, GitHub runs a [Jekyll](https://jekyllrb.com/) build action which inevitably fails. The workaround for this is allegedly to add a `.nojekyll` file to the repo root but so far that has been ineffective.~~ In the reusable GitHub Action I removed the `workflow-dispatch:` item under `on:` and in GitHub I set `Code and Automation -> Pages -> Build and deployment -> Source to GitHub Actions` and was able to bypass the Jekyll `pages-build-deployment` action.
