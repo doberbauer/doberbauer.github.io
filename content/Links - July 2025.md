@@ -1,7 +1,7 @@
 Title: Links - July
 Date: 2025-07-28 11:46
 Category: Links
-Status: draft
+Status: published
 Tags: links
 
 This is the start of my Links series. Every month I'll add links to articles, projects and other stuff that's piqued my interest over the last roughly thirty days. Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) **No affiliate links EVER.**
