@@ -1,11 +1,14 @@
-Title: Links - July
+Title: Links - 2025
 Date: 2025-07-28 11:46
 Category: Links
 Status: published
 Tags: links
 
-This is the start of my Links series. Every month I'll add links to articles, projects and other stuff that's piqued my interest over the last roughly thirty days. Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) **No affiliate links EVER.**
+Every month I'll add links to articles, projects and other stuff that's piqued my interest over the last roughly thirty days. Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) 
+**No affiliate links EVER.**
 
+
+# July
 - [Do not download the app, use the website](https://idiallo.com/blog/dont-download-apps)
 - [Compression culture is making you stupid and uninteresting](https://maalvika.substack.com/p/compression-culture-is-making-you)
 - [Nobody Has A Personality Anymore](https://www.freyaindia.co.uk/p/nobody-has-a-personality-anymore)
