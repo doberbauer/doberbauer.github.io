@@ -9,7 +9,13 @@ Every month I'll add links to articles, projects and other stuff that's piqued m
 Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) 
 
 **No affiliate links EVER.**
+
+
 # July
+- [Stack Overflow data reveals the hidden productivity tax of ‘almost right’ AI code](https://venturebeat.com/ai/stack-overflow-data-reveals-the-hidden-productivity-tax-of-almost-right-ai-code/)
+- [I Know When You're Vibe Coding](https://alexkondov.com/i-know-when-youre-vibe-coding/)
+- [gitignore is inherently Sisyphean](https://rgbcu.be/blog/gitignore/)
+- [Vibe code is legacy code](https://blog.val.town/vibe-code)
 - [Do not download the app, use the website](https://idiallo.com/blog/dont-download-apps)
 - [Compression culture is making you stupid and uninteresting](https://maalvika.substack.com/p/compression-culture-is-making-you)
 - [Nobody Has A Personality Anymore](https://www.freyaindia.co.uk/p/nobody-has-a-personality-anymore)
