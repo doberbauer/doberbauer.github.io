@@ -4,6 +4,10 @@ Category: Photography
 Status: published
 Tags: photography
 
+I am a freelance photographer and have enjoyed doing engagement photos, graduation photos, family and maternity photos, portraits and special events. 
+
+From 2017-2020 I worked as the photographer for UC Davis's Undergraduate Education Communications team.
+
 
 ![](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1i7slpLcKqqrAxX3D7ufAqtk88-cQ8sOq)
 
