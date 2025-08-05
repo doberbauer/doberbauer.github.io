@@ -9,6 +9,11 @@ I am a freelance photographer and have enjoyed doing engagement photos, graduati
 From 2017-2020 I worked as the photographer for UC Davis's Undergraduate Education Communications team.
 
 
+---
+
+
+
+
 ![](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1i7slpLcKqqrAxX3D7ufAqtk88-cQ8sOq)
 
 ![](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1dZiyi2h3Nff4VFiBj6RPjuK2s56AmFp0)
