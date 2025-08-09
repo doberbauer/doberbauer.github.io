@@ -11,6 +11,10 @@ Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/)
 **No affiliate links EVER.**
 
 # August 
+- [Coffeematic PC](https://www.dougmacdowell.com/coffeematic-pc.html)
+- [EconTeen - lessons on financial literacy for teens](https://econteen.com/)
+- [List of "tech for good" job boards](https://evanhahn.com/list-of-tech-for-good-job-boards/)
+- [Historical Tech Tree](https://www.historicaltechtree.com/)
 - [AI is about to solve loneliness - That's a Problem](https://www.newyorker.com/magazine/2025/07/21/ai-is-about-to-solve-loneliness-thats-a-problem)
 - [No, AI is not Making Engineers 10x as Productive](https://colton.dev/blog/curing-your-ai-10x-engineer-imposter-syndrome/)
 - [AI Stands for Artificial Inanity](https://lambdaland.org/posts/2025-08-04_artifical_inanity/)
