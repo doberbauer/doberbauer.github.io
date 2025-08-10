@@ -14,8 +14,7 @@ From 2017-2020 I worked as the photographer for UC Davis's Undergraduate Educati
 <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1i7slpLcKqqrAxX3D7ufAqtk88-cQ8sOq" alt="photo" width="500"/>
 
 
-<img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1dZiyi2h3Nff4VFiBj6RPjuK2s56AmFp0)
-" alt="photo" width="500"/>
+<img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1dZiyi2h3Nff4VFiBj6RPjuK2s56AmFp0" alt="photo" width="500"/>
 
 ![](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdrive.google.com/uc?id=1tw8bB-vvakyDAMc-yv3_x4RzjVd4LkaW)
 
