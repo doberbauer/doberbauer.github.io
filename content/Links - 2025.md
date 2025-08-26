@@ -24,6 +24,11 @@ Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/)
 - [AI Ethics is being narrowed on purpose - Just like privacy was](https://nimishg.substack.com/p/ai-ethics-is-being-narrowed-on-purpose)
 - [About AI](https://priver.dev/blog/ai/about-ai/)
 - [The Whispering Earring (Scott Alexander)](https://croissanthology.com/earring)
+- [He Had Dangerous Delusions. ChatGPT Admitted It Made Them Worse.](https://www.wsj.com/tech/ai/chatgpt-chatbot-psychology-manic-episodes-57452d14)
+- [Every question you ask, every comment you make, I'll be recording you](https://www.theregister.com/2025/08/18/opinion_column_ai_surveillance/)
+- [I tried coding with AI, I became lazy and stupid](https://thomasorus.com/i-tried-coding-with-ai-i-became-lazy-and-stupid)
+- [Who does your assistant serve?](https://xeiaso.net/blog/2025/who-assistant-serve/)
+- [MIT report: 95% of generative AI pilots at companies are failing](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/)
 
 # July
 - [Stack Overflow data reveals the hidden productivity tax of ‘almost right’ AI code](https://venturebeat.com/ai/stack-overflow-data-reveals-the-hidden-productivity-tax-of-almost-right-ai-code/)
