@@ -1,8 +1,8 @@
-Title: Links - Deals
+Title: Resources - Deals
 Date: 2025-08-26 14:29
-Category: Links
+Category: Resources
 Status: published
-Tags: links
+Tags: resources
 
 Most of these sites aggregate deals from various sites to help you get great deals.
 I'm not affiliated with any of these sites, I just appreciate the work they do. 
