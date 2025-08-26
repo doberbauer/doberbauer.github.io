@@ -10,8 +10,10 @@ Tags: resources, maps
 - [ADSB Exchange](https://globe.adsbexchange.com/) Like flightradar24 but from crowdsourced ADS-B data only
 - [BirdWeather](https://www.birdweather.com/) Map of bird species from crowdsourced bird call classification.
 - [windy](https://www.windy.com) Global wind speed map
+- [Sounds of the Forest](https://timberfestival.org.uk/soundsoftheforest-soundmap/) Sounds of woodlands and forests from around the world.
 - [Safecast Radiation Map](https://map.safecast.org/) Map of radiation levels around the globe.
 - [Blitzortung Lightning Map](https://www.blitzortung.org/en/live_lightning_maps.php) View lightning strikes as they happen across the globe
+- [Taste Atlas](https://www.tasteatlas.com/map) "... an encyclopedia of flavors, a world atlas of traditional dishes, local ingredients, and authentic restaurants."
 - [Starlink Map](https://www.starlinkmap.org/) Live map of SpaceX Starlink satellite constellation.
 - [AstriaGraph](http://astria.tacc.utexas.edu/AstriaGraph/) Real-time map of orbital objects including satellites and debris
 - [Nearby Wiki](https://en.nearbywiki.org/map/) View wikipedia entries for areas of interest near you.
