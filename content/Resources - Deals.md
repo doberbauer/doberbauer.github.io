@@ -11,6 +11,8 @@ I'm not affiliated with any of these sites, I just appreciate the work they do.
 - [Disk Prices](https://diskprices.com/) Great site for finding deals on storage media
 - [CPU Scout](https://www.cpuscout.com/) Deals on CPUs. Very similar format to Disk Prices. Same developer?
 - [GPU Scout](https://www.gpuscout.com/) Deals on GPUs. From the same developer as CPU Scout. 
+- [RAM Stick Prices](https://ramstickprices.com/) Deals on RAM. Inspired by Disk Prices
+- [Battery Pack Prices](https://batterypackprices.com/) Deals on portable charging banks.
 # Price Trackers
 - [psprices](https://psprices.com/)
 - [steamDB](https://steamdb.info/)
@@ -28,3 +30,4 @@ I'm not affiliated with any of these sites, I just appreciate the work they do.
 - [hwlocator](hwlocator.com) Run by the same person behind rpilocator but for edge AI hardware.
 - [CPU-List](https://www.cpu-list.com/) List of CPUs plus purchase links. Not necessarily 
 - [ShuckStop](https://shucks.top/) The premise here is that external hard drives are by and large cheaper than their equivalent internal hard drive. Thus, one buys the external version and "shucks" the internal drive from the casing. At the time I'm writing this, this banner is at the top of the page: "Amazon has shut down API access for the site because price tracking is not allowed, and they have not replied about the changes I made to be more compliant"
+- [Computer Display Prices](https://computerdisplayprices.com/)
