@@ -8,7 +8,7 @@ Every month I'll add links to articles, projects and other stuff that's piqued m
 
 Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) 
 
-**No affiliate links EVER.**
+**No affiliate links ever.**
 
 # August 
 - [Coffeematic PC](https://www.dougmacdowell.com/coffeematic-pc.html)
