@@ -18,7 +18,3 @@ Tags: resources
 - [No-Bullshit Games](https://nobsgames.stavros.io/) List of good, non-annoying enjoyable mobile games
 - [Proof Wiki](https://proofwiki.org/wiki/Main_Page) Online compendium of mathematical proof
 - [Weather Spark](https://weatherspark.com/) Typical weather anywhere on Earth
-
-<div>
- <iframe src="https://obsidian.md/auth" title="description"></iframe> 
-</div>
