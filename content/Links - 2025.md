@@ -9,7 +9,25 @@ Every month I'll add links to articles, projects and other stuff that's piqued m
 Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) 
 
 **No affiliate links ever.**
-
+# September
+- [Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence (pdf)](https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf)
+- [The leverage paradox](https://www.indiehackers.com/post/lifestyle/the-leverage-paradox-ksRiX6y6W7NzfBE57dzt)
+- [I Am An AI Hater](https://anthonymoser.github.io/writing/ai/haterdom/2025/08/26/i-am-an-ai-hater.html)
+- [LabPlot](https://labplot.org/)
+- [fossjobs](https://www.fossjobs.net/)
+- [Python: The Documentary](https://www.youtube.com/watch?app=desktop&v=GfH4QL4VqJ0)
+- [wikigrapher](https://wikigrapher.com/paths)
+- [How do I get into the Game Industry](https://garry.net/posts/how-do-i-get-into-the-game-industry)
+- [Amazon Has Sat Out the AI Talent War. This Internal Document Shows Why](https://www.businessinsider.com/amazon-ai-talent-wars-internal-document-2025-8)
+- [I’m a High Schooler. AI Is Demolishing My Education](https://www.theatlantic.com/technology/archive/2025/09/high-school-student-ai-education/684088/)
+- [UK government trial of M365 Copilot finds no clear productivity boost](https://www.theregister.com/2025/09/04/m365_copilot_uk_government/)
+- [Let us git rid of it, angry GitHub users say of forced Copilot features](https://www.theregister.com/2025/09/05/github_copilot_complaints/)
+- [AI Use at Large Companies Is in Decline, Census Bureau Says](https://gizmodo.com/ai-adoption-declining-at-large-companies-2000655693)
+- [The Software Engineers Paid to Fix Vibe Coded Messes](https://www.404media.co/the-software-engineers-paid-to-fix-vibe-coded-messes/)
+- [An Engineering History of the Manhattan Project](https://www.construction-physics.com/p/an-engineering-history-of-the-manhattan)
+- [gentoo linux AI policy](https://wiki.gentoo.org/wiki/Project:Council/AI_policy)
+- [Read to Forget](https://mo42.bearblog.dev/read-to-forget/)
+- [Another lawsuit blames an AI company of complicity in a teenager's suicide](https://www.engadget.com/ai/another-lawsuit-blames-an-ai-company-of-complicity-in-a-teenagers-suicide-184529475.html)
 # August 
 - [Coffeematic PC](https://www.dougmacdowell.com/coffeematic-pc.html)
 - [EconTeen - lessons on financial literacy for teens](https://econteen.com/)
