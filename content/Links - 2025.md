@@ -12,7 +12,7 @@ Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/)
 # September
 - [Doctors who used AI assistance in procedures became 20% worse at spotting abnormalities on their own, study finds, raising concern about overreliance](https://fortune.com/2025/08/26/ai-overreliance-doctor-procedure-study/)
 - [Feeling Cranky About AI and CS Education](https://cacm.acm.org/blogcacm/feeling-cranky-about-ai-and-cs-education/)
-- [There isn’t an AI bubble—there are three](https://www.fastcompany.com/91400857/there-isnt-an-ai-bubble-there-are-three-ai-bu)](https://www.fastcompany.com/91400857/there-isnt-an-ai-bubble-there-are-three-ai-bu)
+- [There isn’t an AI bubble—there are three](https://www.fastcompany.com/91400857/there-isnt-an-ai-bubble-there-are-three-ai-bu)
 - [Are touchscreens in cars dangerous?](https://www.economist.com/science-and-technology/2025/09/19/are-touchscreens-in-cars-dangerous)
 - [The best YouTube downloaders (and how Google silenced the press)](https://windowsread.me/p/best-youtube-downloaders)
 - [Dev Culture Is Dying The Curious Developer Is Gone](https://dayvster.com/blog/dev-culture-is-dying-the-curious-developer-is-gone/)
