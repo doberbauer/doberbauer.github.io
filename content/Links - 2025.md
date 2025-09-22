@@ -10,6 +10,13 @@ Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/)
 
 **No affiliate links ever.**
 # September
+- [Doctors who used AI assistance in procedures became 20% worse at spotting abnormalities on their own, study finds, raising concern about overreliance](https://fortune.com/2025/08/26/ai-overreliance-doctor-procedure-study/)
+- [Feeling Cranky About AI and CS Education](https://cacm.acm.org/blogcacm/feeling-cranky-about-ai-and-cs-education/)
+- [There isn’t an AI bubble—there are three](https://www.fastcompany.com/91400857/there-isnt-an-ai-bubble-there-are-three-ai-bu)](https://www.fastcompany.com/91400857/there-isnt-an-ai-bubble-there-are-three-ai-bu)
+- [Are touchscreens in cars dangerous?](https://www.economist.com/science-and-technology/2025/09/19/are-touchscreens-in-cars-dangerous)
+- [The best YouTube downloaders (and how Google silenced the press)](https://windowsread.me/p/best-youtube-downloaders)
+- [Dev Culture Is Dying The Curious Developer Is Gone](https://dayvster.com/blog/dev-culture-is-dying-the-curious-developer-is-gone/)
+- [Samsung brings ads to US fridges](https://www.theverge.com/news/780757/samsung-brings-ads-to-us-fridges)
 - [Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence (pdf)](https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf)
 - [The leverage paradox](https://www.indiehackers.com/post/lifestyle/the-leverage-paradox-ksRiX6y6W7NzfBE57dzt)
 - [I Am An AI Hater](https://anthonymoser.github.io/writing/ai/haterdom/2025/08/26/i-am-an-ai-hater.html)
