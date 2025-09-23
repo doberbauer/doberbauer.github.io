@@ -10,6 +10,7 @@ Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/)
 
 **No affiliate links ever.**
 # September
+- [AI-Generated “Workslop” Is Destroying Productivity](https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity)
 - [Doctors who used AI assistance in procedures became 20% worse at spotting abnormalities on their own, study finds, raising concern about overreliance](https://fortune.com/2025/08/26/ai-overreliance-doctor-procedure-study/)
 - [Feeling Cranky About AI and CS Education](https://cacm.acm.org/blogcacm/feeling-cranky-about-ai-and-cs-education/)
 - [There isn’t an AI bubble—there are three](https://www.fastcompany.com/91400857/there-isnt-an-ai-bubble-there-are-three-ai-bu)
