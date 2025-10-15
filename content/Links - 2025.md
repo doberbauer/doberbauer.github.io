@@ -9,6 +9,17 @@ Every month I'll add links to articles, projects and other stuff that's piqued m
 Inspired by Cory Doctorow's [Pluralistic](https://pluralistic.net/) 
 
 **No affiliate links ever.**
+# October
+- [How to Lead in a Room Full of Experts](https://idiallo.com/blog/how-to-lead-in-a-room-full-of-experts)
+- [The AI coding trap](https://chrisloy.dev/post/2025/09/28/the-ai-coding-trap)
+- [Improved Map Generation](https://civilization.2k.com/civ-vii/from-the-devs/map-generation/)
+- [Meta plans to sell targeted ads based on data in your AI chats](https://techcrunch.com/2025/10/01/meta-plans-to-sell-targeted-ads-based-on-data-in-your-ai-chats/)
+- [Command Interface: How Your Device Choice Shapes Power Relations](https://zakelfassi.com/command-interface-device-power)
+- [The perils of letting AI plan your next trip](https://www.bbc.com/travel/article/20250926-the-perils-of-letting-ai-plan-your-next-trip)
+- ["AI is an attack from above on wages": An interview with cognitive scientist Hagen Blix](https://www.bloodinthemachine.com/p/ai-is-an-attack-from-above-on-wages)
+- [People regret buying Amazon smart displays after being bombarded with ads](https://arstechnica.com/gadgets/2025/10/people-regret-buying-amazon-smart-displays-after-being-bombarded-with-ads/)
+- [Why your boss isn't worried about AI](https://boydkane.com/essays/boss)
+- [I am a programmer, not a rubber-stamp that approves Copilot generated code](https://prahladyeri.github.io/blog/2025/10/i-am-a-programmer.html)
 # September
 - [AI-Generated “Workslop” Is Destroying Productivity](https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity)
 - [Doctors who used AI assistance in procedures became 20% worse at spotting abnormalities on their own, study finds, raising concern about overreliance](https://fortune.com/2025/08/26/ai-overreliance-doctor-procedure-study/)
